@@ -548,9 +548,9 @@ html.light-theme .hero-blob {
 }
 
 .btn-outline {
-    background: transparent;
+    background: rgba(124, 58, 237, 0.15);
     color: var(--text-primary);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(124, 58, 237, 0.4);
     backdrop-filter: var(--glass-blur);
 }
 
@@ -1408,8 +1408,8 @@ html.light-theme .hero-blob {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        width: 100vw;
+        height: 100vh;
         background: var(--bg-primary);
         flex-direction: column;
         align-items: center;
@@ -1417,6 +1417,7 @@ html.light-theme .hero-blob {
         gap: 28px;
         z-index: 999;
         transition: background-color var(--transition-theme);
+        overflow-y: auto;
     }
 
     .nav-links.open {
@@ -1744,6 +1745,56 @@ html.light-theme .hero-blob {
     .btn-cert-verify {
         font-size: 0.7rem;
         padding: 5px 10px;
+    }
+}
+
+/* ============================================
+   BACK TO TOP BUTTON
+   ============================================ */
+.back-to-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    z-index: 900;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity var(--transition-base), visibility var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    box-shadow: var(--glow-accent-strong);
+    transform: translateY(-3px);
+}
+
+.back-to-top svg {
+    width: 22px;
+    height: 22px;
+}
+
+@media (max-width: 480px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 42px;
+        height: 42px;
     }
 }
 

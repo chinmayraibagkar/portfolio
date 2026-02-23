@@ -38,11 +38,30 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       nav.classList.remove('scrolled');
     }
+
+    // Show/hide back-to-top button after scrolling past hero
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+      if (scrollY > window.innerHeight * 0.8) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }
+
     lastScroll = scrollY;
   };
 
   window.addEventListener('scroll', handleNavScroll, { passive: true });
   handleNavScroll();
+
+  // Back-to-top click handler
+  const backToTopBtn = document.getElementById('backToTop');
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   // ============================================
   // 3. ACTIVE NAV LINK HIGHLIGHT
@@ -155,7 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
     anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
+
+      // If href is just '#', scroll to top (CR logo)
+      if (targetId === '#') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
 
       const targetEl = document.querySelector(targetId);
       if (targetEl) {

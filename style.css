@@ -1501,6 +1501,13 @@ html.light-theme .hero-blob {
     .award-badge {
         font-size: 0.7rem;
         padding: 5px 12px;
+        display: flex;
+        width: fit-content;
+    }
+
+    .award-badge+.award-badge {
+        margin-left: 0;
+        margin-top: 4px;
     }
 
     .timeline {

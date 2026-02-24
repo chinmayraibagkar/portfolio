@@ -252,6 +252,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
+  // 8.5 WORKFLOW PIPELINE ANIMATION
+  // ============================================
+  const workflowPipeline = document.querySelector('.workflow-pipeline');
+  if (workflowPipeline) {
+    const steps = workflowPipeline.querySelectorAll('.workflow-step, .workflow-arrow');
+
+    // Initially pause animations by pausing the elements
+    steps.forEach(step => {
+      step.style.animationPlayState = 'paused';
+    });
+
+    const pipelineObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Play animations when in view
+          steps.forEach(step => {
+            step.style.animationPlayState = 'running';
+          });
+          pipelineObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    pipelineObserver.observe(workflowPipeline);
+  }
+
+  // ============================================
   // 9. GA4 SECTION VIEW TRACKING
   // ============================================
   if (typeof gtag !== 'undefined') {

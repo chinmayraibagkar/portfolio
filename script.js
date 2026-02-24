@@ -252,31 +252,128 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // 8.5 WORKFLOW PIPELINE ANIMATION
+  // 8.5 ROBUST WORKFLOW ARCHITECTURE (Animated SVG)
   // ============================================
-  const workflowPipeline = document.querySelector('.workflow-pipeline');
-  if (workflowPipeline) {
-    const steps = workflowPipeline.querySelectorAll('.workflow-step, .workflow-arrow');
+  function initWorkflowAnimation() {
+    const container = document.getElementById('workflowArchitecture');
+    const svg = document.getElementById('workflowSvg');
+    if (!container || !svg) return;
 
-    // Initially pause animations by pausing the elements
-    steps.forEach(step => {
-      step.style.animationPlayState = 'paused';
+    const drawPaths = () => {
+      svg.innerHTML = ''; // Clear existing
+      const containerRect = container.getBoundingClientRect();
+      const isMobile = window.innerWidth <= 900;
+
+      // Helper to calculate exact center or edge
+      const getAnchor = (id, side = 'center') => {
+        const el = document.getElementById(id);
+        if (!el) return { x: 0, y: 0 };
+        const rect = el.getBoundingClientRect();
+        
+        let x = rect.left - containerRect.left;
+        let y = rect.top - containerRect.top;
+        
+        if (side === 'right') x += rect.width;
+        else if (side === 'center' || side === 'top' || side === 'bottom') x += rect.width / 2;
+        
+        if (side === 'bottom') y += rect.height;
+        else if (side === 'center' || side === 'left' || side === 'right') y += rect.height / 2;
+        
+        // Add padding offsets to prevent lines from overlapping borders
+        if (side === 'right') x += 2;
+        if (side === 'left') x -= 2;
+        if (side === 'bottom') y += 2;
+        if (side === 'top') y -= 2;
+
+        return { x, y };
+      };
+
+      const createPath = (start, end, isFeedback = false) => {
+        let bezierD;
+        
+        if (isFeedback) {
+           const bottomY = containerRect.height - 40;
+           if (isMobile) {
+               // On mobile, just flow back up the side
+               bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 30} ${bottomY} L 20 ${bottomY} Q 10 ${bottomY} 10 ${end.y} L ${end.x - 10} ${end.y}`;
+           } else {
+               // Standard feedback loop underneath
+               bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 50} ${bottomY} L ${end.x + 50} ${bottomY} Q ${end.x} ${bottomY} ${end.x} ${end.y + 20}`;
+           }
+        } else if (isMobile) {
+            // Vertical flow
+            bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + 30}, ${end.x} ${end.y - 30}, ${end.x} ${end.y}`;
+        } else {
+            // Horizontal flow
+            bezierD = `M ${start.x} ${start.y} C ${start.x + 50} ${start.y}, ${end.x - 50} ${end.y}, ${end.x} ${end.y}`;
+        }
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', bezierD);
+        path.setAttribute('class', isFeedback ? 'wf-path wf-path-feedback' : 'wf-path');
+        svg.appendChild(path);
+
+        // Particle logic
+        const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        particle.setAttribute('r', isFeedback ? '2.5' : '3');
+        particle.setAttribute('class', isFeedback ? 'wf-particle wf-particle-feedback' : 'wf-particle');
+        
+        const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+        const dur = isFeedback ? (Math.random() * 2 + 5) : (Math.random() * 1.5 + 2.5); // Randomize speed slightly
+        animate.setAttribute('dur', dur + 's');
+        animate.setAttribute('repeatCount', 'indefinite');
+        animate.setAttribute('path', bezierD);
+        
+        particle.appendChild(animate);
+        svg.appendChild(particle);
+      };
+
+      // Define Connections
+      const gads = getAnchor('wf-gads', isMobile ? 'bottom' : 'right');
+      const meta = getAnchor('wf-meta', isMobile ? 'bottom' : 'right');
+      const prepIn = getAnchor('wf-prep', isMobile ? 'top' : 'left');
+      
+      createPath(gads, prepIn);
+      createPath(meta, prepIn);
+
+      const prepOut = getAnchor('wf-prep', isMobile ? 'bottom' : 'right');
+      const bqIn = getAnchor('wf-bq', isMobile ? 'top' : 'left');
+      
+      createPath(prepOut, bqIn);
+
+      const bqOut = getAnchor('wf-bq', isMobile ? 'bottom' : 'right');
+      const appsIn = getAnchor('wf-apps', isMobile ? 'top' : 'left');
+      const sheetsIn = getAnchor('wf-sheets', isMobile ? 'top' : 'left');
+      
+      createPath(bqOut, appsIn);
+      createPath(bqOut, sheetsIn);
+
+      // Feedback Loop (Apps Script back to Google Ads)
+      const appsOut = getAnchor('wf-apps', isMobile ? 'bottom' : 'bottom');
+      const gadsFeedbackIn = getAnchor('wf-gads', isMobile ? 'left' : 'bottom');
+      createPath(appsOut, gadsFeedbackIn, true);
+    };
+
+    // Draw initially, using setTimeout to ensure fonts/layout are loaded
+    setTimeout(drawPaths, 300);
+    
+    // Redraw on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawPaths, 200);
     });
 
-    const pipelineObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Play animations when in view
-          steps.forEach(step => {
-            step.style.animationPlayState = 'running';
-          });
-          pipelineObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.3 });
-
-    pipelineObserver.observe(workflowPipeline);
+    // Optional: Add pulsing classes sequentially to nodes
+    const nodes = document.querySelectorAll('.wf-node, .wf-glass-card');
+    let delay = 0;
+    nodes.forEach(node => {
+      setTimeout(() => node.classList.add('active-pulse'), delay);
+      delay += 800;
+    });
   }
+
+  initWorkflowAnimation();
 
   // ============================================
   // 9. GA4 SECTION VIEW TRACKING

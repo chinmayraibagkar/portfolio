@@ -1600,104 +1600,7 @@ html.light-theme .hero-blob {
     margin: 0;
 }
 
-/* Workflow Pipeline Animation */
-.workflow-pipeline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--bg-section-alt);
-    padding: 40px;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--glass-border);
-    margin-bottom: 40px;
-    position: relative;
-    overflow: hidden;
-}
-
-.workflow-pipeline::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 40px;
-    right: 40px;
-    height: 2px;
-    background: var(--glass-border);
-    z-index: 0;
-}
-
-.workflow-step {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    text-align: center;
-    background: var(--bg-primary);
-    padding: 20px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
-    min-width: 140px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.workflow-step-2 {
-    border-color: var(--accent-1);
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.2);
-}
-
-.workflow-step-icon {
-    font-size: 2rem;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--gradient-subtle);
-    border-radius: 50%;
-    margin-bottom: 4px;
-}
-
-.workflow-step span {
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.workflow-step small {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-.workflow-arrow {
-    position: relative;
-    z-index: 1;
-    color: var(--accent-1);
-    animation: pulseArrow 2s infinite;
-}
-
-.workflow-arrow svg {
-    width: 24px;
-    height: 24px;
-    background: var(--bg-primary);
-    border-radius: 50%;
-}
-
-@keyframes pulseArrow {
-    0% {
-        transform: scale(1);
-        opacity: 0.7;
-    }
-
-    50% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 0.7;
-    }
-}
+/* --- Old Workflow Animation Removed --- */
 
 /* Tooltip for pipeline steps */
 .step-tooltip {
@@ -1705,8 +1608,9 @@ html.light-theme .hero-blob {
     bottom: 115%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: var(--bg-card);
-    border: 1px solid var(--glass-border);
+    background-color: #1A1A24;
+    background: var(--bg-section-alt);
+    border: 1px solid var(--accent-1);
     color: var(--text-primary);
     padding: 12px 16px;
     border-radius: var(--radius-sm);
@@ -2011,28 +1915,7 @@ html.light-theme .hero-blob {
 
 /* Responsive Work Samples */
 @media (max-width: 900px) {
-    .workflow-pipeline {
-        flex-direction: column;
-        padding: 40px 20px;
-    }
-
-    .workflow-pipeline::before {
-        left: 50%;
-        top: 20px;
-        bottom: 20px;
-        width: 2px;
-        height: auto;
-        transform: translateX(-50%);
-    }
-
-    .workflow-step {
-        width: 100%;
-        max-width: 300px;
-    }
-
-    .workflow-arrow svg {
-        transform: rotate(90deg);
-    }
+    /* Old mobile workflow removed */
 
     .step-tooltip {
         position: static;
@@ -2051,6 +1934,40 @@ html.light-theme .hero-blob {
 
     .step-tooltip::after {
         display: none;
+    }
+}
+
+@keyframes moveDotMobile {
+
+    0%,
+    9%,
+    100% {
+        top: 0;
+        left: -3px;
+        opacity: 0;
+        background: var(--accent-1);
+        box-shadow: 0 0 10px var(--accent-1);
+    }
+
+    10% {
+        opacity: 1;
+        top: 0;
+        left: -3px;
+    }
+
+    18% {
+        top: 100%;
+        left: -3px;
+        opacity: 1;
+        background: var(--accent-2);
+        box-shadow: 0 0 10px var(--accent-2);
+    }
+
+    19%,
+    99% {
+        top: 100%;
+        left: -3px;
+        opacity: 0;
     }
 }
 
@@ -2149,5 +2066,214 @@ html.light-theme .hero-blob {
 
     html {
         scroll-behavior: auto;
+    }
+}
+/* ============================================
+   ROBUST WORKFLOW ARCHITECTURE (Animated)
+   ============================================ */
+.workflow-architecture {
+    position: relative;
+    background: radial-gradient(circle at top left, #1e1338, #110c1c);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 60px 40px;
+    margin-bottom: 40px;
+    min-height: 400px;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.workflow-svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.wf-path {
+    fill: none;
+    stroke: rgba(124, 58, 237, 0.3);
+    stroke-width: 1.5;
+    stroke-dasharray: 4, 4;
+}
+
+.wf-path-feedback {
+    stroke: rgba(236, 72, 153, 0.4); /* Pinkish for feedback */
+}
+
+.wf-particle {
+    fill: var(--accent-1);
+    filter: drop-shadow(0 0 5px var(--accent-1)) drop-shadow(0 0 10px var(--accent-1));
+}
+
+.wf-particle-feedback {
+    fill: var(--accent-2);
+    filter: drop-shadow(0 0 5px var(--accent-2)) drop-shadow(0 0 10px var(--accent-2));
+}
+
+.workflow-grid {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+}
+
+.wf-layer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+}
+
+.wf-layer-title {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: -10px;
+    opacity: 0.8;
+}
+
+/* Glassmorphism Containers & Nodes */
+.wf-node, .wf-glass-card {
+    background: rgba(26, 26, 36, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
+}
+
+.wf-node:hover, .wf-glass-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 58, 237, 0.4);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
+}
+
+.wf-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    justify-content: center;
+}
+
+.wf-node span {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.wf-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.wf-icon-group {
+    display: flex;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 50px;
+}
+
+.wf-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+}
+
+.wf-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+/* Sub-task Pills */
+.wf-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wf-pill {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.wf-pill:hover {
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--text-primary);
+    border-color: rgba(124, 58, 237, 0.3);
+}
+
+/* Feedback Layer specific styles */
+.wf-feedback-text {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    z-index: 2;
+    background: rgba(17, 12, 28, 0.8);
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* Pulse animation for the nodes */
+@keyframes nodePulse {
+    0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+}
+
+.wf-node.active-pulse, .wf-glass-card.active-pulse {
+    animation: nodePulse 2s infinite;
+    border-color: var(--accent-1);
+}
+
+@media (max-width: 900px) {
+    .workflow-grid {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .wf-layer {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+    .workflow-architecture {
+        padding: 40px 20px 60px;
+    }
+    .wf-feedback-text {
+        bottom: 10px;
+        font-size: 0.65rem;
     }
 }

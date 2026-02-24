@@ -270,57 +270,85 @@
           </div>
 
           <!-- Animated Workflow -->
-          <div class="workflow-pipeline">
-            <div class="workflow-step workflow-step-1">
-              <div class="workflow-step-icon">
-                <img src="https://cdn.simpleicons.org/googleads" alt="Google Ads" width="22" height="22">
-                <img src="https://cdn.simpleicons.org/meta" alt="Meta" width="22" height="22" style="margin-left: 4px;">
+          <div class="workflow-architecture" id="workflowArchitecture">
+            <svg class="workflow-svg-overlay" id="workflowSvg"></svg>
+            <div class="workflow-grid">
+              
+              <!-- Layer 1: Ingestion -->
+              <div class="wf-layer">
+                <div class="wf-layer-title">Ingestion Layer</div>
+                <div class="wf-node wf-glass" id="wf-gads">
+                  <div class="wf-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Ads_logo.svg" alt="Google Ads" width="24" height="24"></div>
+                  <span>Google Ads</span>
+                </div>
+                <div class="wf-node wf-glass" id="wf-meta">
+                  <div class="wf-icon"><img src="https://cdn.simpleicons.org/meta/1877F2" alt="Meta" width="24" height="24"></div>
+                  <span>Meta Ads</span>
+                </div>
               </div>
-              <span>Ad Platforms</span>
-              <small>Extract & Aggregation</small>
-              <div class="step-tooltip">Extracting raw performance data across search and social channels automatically.
+
+              <!-- Layer 2: Processing -->
+              <div class="wf-layer">
+                <div class="wf-layer-title">Processing Layer</div>
+                <div class="wf-glass-card" id="wf-prep">
+                  <div class="wf-card-header">
+                    <div class="wf-icon-group">
+                      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python" width="20" height="20">
+                      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pandas/pandas-original.svg" alt="Pandas" width="20" height="20">
+                    </div>
+                    <span class="wf-title">Pre-Processing Engine</span>
+                  </div>
+                  <div class="wf-pills">
+                    <div class="wf-pill">API Extraction</div>
+                    <div class="wf-pill">Data Cleaning</div>
+                    <div class="wf-pill">Schema Mapping</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Layer 3: Storage -->
+              <div class="wf-layer">
+                <div class="wf-layer-title">Storage Layer</div>
+                <div class="wf-glass-card" id="wf-bq">
+                  <div class="wf-card-header">
+                    <div class="wf-icon"><img src="https://cdn.simpleicons.org/googlebigquery/4285F4" alt="BigQuery" width="24" height="24"></div>
+                    <span class="wf-title">Data Warehouse</span>
+                  </div>
+                  <div class="wf-pills">
+                    <div class="wf-pill">Data Storage</div>
+                    <div class="wf-pill">Partitioning</div>
+                    <div class="wf-pill">Scheduled Queries</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Layer 4: Presentation & Automation -->
+              <div class="wf-layer">
+                <div class="wf-layer-title">Automation & UI Layer</div>
+                <div class="wf-glass-card" id="wf-apps">
+                  <div class="wf-card-header">
+                    <div class="wf-icon"><img src="https://www.gstatic.com/images/branding/product/1x/apps_script_48dp.png" alt="Apps Script" width="24" height="24"></div>
+                    <span class="wf-title">Automation Hub</span>
+                  </div>
+                  <div class="wf-pills">
+                    <div class="wf-pill">Trigger Logic</div>
+                    <div class="wf-pill">Anomaly Alerts</div>
+                  </div>
+                </div>
+                
+                <div class="wf-glass-card" id="wf-sheets">
+                  <div class="wf-card-header">
+                    <div class="wf-icon"><img src="https://cdn.simpleicons.org/googlesheets/34A853" alt="Google Sheets" width="20" height="26"></div>
+                    <span class="wf-title">Dashboard</span>
+                  </div>
+                  <div class="wf-pills">
+                    <div class="wf-pill">Live Metrics</div>
+                    <div class="wf-pill">Reporting</div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="workflow-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 6 15 12 9 18" />
-              </svg>
-            </div>
-            <div class="workflow-step workflow-step-2">
-              <div class="workflow-step-icon">
-                <img src="https://cdn.simpleicons.org/googlebigquery" alt="BigQuery" width="28" height="28">
-              </div>
-              <span>BigQuery</span>
-              <small>Data Warehouse</small>
-              <div class="step-tooltip">Loading massive structured datasets into scalable cloud storage for analysis.
-              </div>
-            </div>
-            <div class="workflow-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 6 15 12 9 18" />
-              </svg>
-            </div>
-            <div class="workflow-step workflow-step-3">
-              <div class="workflow-step-icon">
-                <img src="https://cdn.simpleicons.org/googleappsscript" alt="Apps Script" width="28" height="28">
-              </div>
-              <span>Apps Script</span>
-              <small>Automation Bridge</small>
-              <div class="step-tooltip">Automating the data pipeline triggers and aggregation logic seamlessly.</div>
-            </div>
-            <div class="workflow-arrow">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 6 15 12 9 18" />
-              </svg>
-            </div>
-            <div class="workflow-step workflow-step-4">
-              <div class="workflow-step-icon">
-                <img src="https://cdn.simpleicons.org/googlesheets" alt="Google Sheets" width="24" height="32">
-              </div>
-              <span>Google Sheets</span>
-              <small>Dashboard Frontend</small>
-              <div class="step-tooltip">Serving summarized lightweight data dynamically to stakeholders.</div>
-            </div>
+            <div class="wf-feedback-text">Feedback Layer (Auto-Bid Adjustments & Alerts)</div>
           </div>
 
           <!-- Impact Metrics -->

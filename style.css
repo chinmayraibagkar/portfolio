@@ -1529,8 +1529,7 @@ html.light-theme .hero-blob {
 .work-card {
     padding: 40px;
     margin-top: 40px;
-    border: 1px solid rgba(124, 58, 237, 0.4);
-    background: linear-gradient(145deg, rgba(15, 23, 42, 0.6) 0%, rgba(124, 58, 237, 0.05) 100%);
+    border: 1px solid var(--glass-border);
     box-shadow: 0 10px 30px -10px rgba(124, 58, 237, 0.2);
 }
 
@@ -1577,7 +1576,7 @@ html.light-theme .hero-blob {
 
 .work-block {
     flex: 1;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-card);
     padding: 24px;
     border-radius: var(--radius-md);
     border: 1px solid var(--glass-border);
@@ -1606,7 +1605,7 @@ html.light-theme .hero-blob {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(15, 23, 42, 0.4);
+    background: var(--bg-section-alt);
     padding: 40px;
     border-radius: var(--radius-lg);
     border: 1px solid var(--glass-border);
@@ -1634,7 +1633,7 @@ html.light-theme .hero-blob {
     align-items: center;
     gap: 10px;
     text-align: center;
-    background: var(--bg-card);
+    background: var(--bg-primary);
     padding: 20px;
     border-radius: var(--radius-md);
     border: 1px solid var(--glass-border);
@@ -1679,7 +1678,7 @@ html.light-theme .hero-blob {
 .workflow-arrow svg {
     width: 24px;
     height: 24px;
-    background: var(--bg-card);
+    background: var(--bg-primary);
     border-radius: 50%;
 }
 
@@ -1698,6 +1697,45 @@ html.light-theme .hero-blob {
         transform: scale(1);
         opacity: 0.7;
     }
+}
+
+/* Tooltip for pipeline steps */
+.step-tooltip {
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    box-shadow: var(--card-shadow);
+    z-index: 10;
+    pointer-events: none;
+    line-height: 1.5;
+}
+
+.step-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--glass-border) transparent transparent transparent;
+}
+
+.workflow-step:hover .step-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
 }
 
 .work-metrics {
@@ -1994,6 +2032,25 @@ html.light-theme .hero-blob {
 
     .workflow-arrow svg {
         transform: rotate(90deg);
+    }
+
+    .step-tooltip {
+        position: static;
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        margin-top: 12px;
+        box-shadow: none;
+        background: transparent;
+        border: none;
+        padding: 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+
+    .step-tooltip::after {
+        display: none;
     }
 }
 

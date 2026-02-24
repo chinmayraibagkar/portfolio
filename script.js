@@ -269,16 +269,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const el = document.getElementById(id);
         if (!el) return { x: 0, y: 0 };
         const rect = el.getBoundingClientRect();
-        
+
         let x = rect.left - containerRect.left;
         let y = rect.top - containerRect.top;
-        
+
         if (side === 'right') x += rect.width;
         else if (side === 'center' || side === 'top' || side === 'bottom') x += rect.width / 2;
-        
+
         if (side === 'bottom') y += rect.height;
         else if (side === 'center' || side === 'left' || side === 'right') y += rect.height / 2;
-        
+
         // Add padding offsets to prevent lines from overlapping borders
         if (side === 'right') x += 2;
         if (side === 'left') x -= 2;
@@ -290,23 +290,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const createPath = (start, end, isFeedback = false) => {
         let bezierD;
-        
+
         if (isFeedback) {
-           const bottomY = containerRect.height - 30; // Increased clearance for feedback layer text
-           if (isMobile) {
-               // On mobile, flow down to the bottom, curve left, go all the way up the left side, then curve right into the start node
-               bezierD = `M ${start.x} ${start.y} L ${start.x} ${bottomY} Q ${start.x} ${bottomY + 15} ${start.x - 20} ${bottomY + 15} L 20 ${bottomY + 15} Q 5 ${bottomY + 15} 5 ${bottomY} L 5 ${end.y} Q 5 ${end.y - 15} 20 ${end.y - 15} L ${end.x - 10} ${end.y - 15} Q ${end.x} ${end.y - 15} ${end.x} ${end.y}`;
-           } else {
-               // Standard feedback loop underneath
-               bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 50} ${bottomY} L ${end.x + 50} ${bottomY} Q ${end.x} ${bottomY} ${end.x} ${end.y + 20}`;
-           }
+          const bottomY = containerRect.height - 30; // Increased clearance for feedback layer text
+          if (isMobile) {
+            // Determine if end node is on left or right half of the container
+            const isRightSide = end.x > (containerRect.width / 2);
+            if (isRightSide) {
+              // Flow down, curve right, go up the right side, curve left into start
+              bezierD = `M ${start.x} ${start.y} L ${start.x} ${bottomY} Q ${start.x} ${bottomY + 15} ${start.x + 20} ${bottomY + 15} L ${containerRect.width - 20} ${bottomY + 15} Q ${containerRect.width - 5} ${bottomY + 15} ${containerRect.width - 5} ${bottomY} L ${containerRect.width - 5} ${end.y} Q ${containerRect.width - 5} ${end.y - 15} ${containerRect.width - 20} ${end.y - 15} L ${end.x + 10} ${end.y - 15} Q ${end.x} ${end.y - 15} ${end.x} ${end.y}`;
+            } else {
+              // On mobile, flow down to the bottom, curve left, go all the way up the left side, then curve right into the start node
+              bezierD = `M ${start.x} ${start.y} L ${start.x} ${bottomY} Q ${start.x} ${bottomY + 15} ${start.x - 20} ${bottomY + 15} L 20 ${bottomY + 15} Q 5 ${bottomY + 15} 5 ${bottomY} L 5 ${end.y} Q 5 ${end.y - 15} 20 ${end.y - 15} L ${end.x - 10} ${end.y - 15} Q ${end.x} ${end.y - 15} ${end.x} ${end.y}`;
+            }
+          } else {
+            // Standard feedback loop underneath
+            bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 50} ${bottomY} L ${end.x + 50} ${bottomY} Q ${end.x} ${bottomY} ${end.x} ${end.y + 20}`;
+          }
         } else if (isMobile) {
-            // Vertical flow - increase the curve control points for smoother S-curves on mobile and prevent overlapping straight lines
-            const deltaY = end.y - start.y;
-            bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + (deltaY * 0.4)}, ${end.x} ${end.y - (deltaY * 0.4)}, ${end.x} ${end.y}`;
+          // Vertical flow - increase the curve control points for smoother S-curves on mobile and prevent overlapping straight lines
+          const deltaY = end.y - start.y;
+          bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + (deltaY * 0.4)}, ${end.x} ${end.y - (deltaY * 0.4)}, ${end.x} ${end.y}`;
         } else {
-            // Horizontal flow
-            bezierD = `M ${start.x} ${start.y} C ${start.x + 60} ${start.y}, ${end.x - 60} ${end.y}, ${end.x} ${end.y}`;
+          // Horizontal flow
+          bezierD = `M ${start.x} ${start.y} C ${start.x + 60} ${start.y}, ${end.x - 60} ${end.y}, ${end.x} ${end.y}`;
         }
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -318,13 +325,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         particle.setAttribute('r', isFeedback ? '2.5' : '3');
         particle.setAttribute('class', isFeedback ? 'wf-particle wf-particle-feedback' : 'wf-particle');
-        
+
         const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
         const dur = isFeedback ? (Math.random() * 2 + 5) : (Math.random() * 1.5 + 2.5); // Randomize speed slightly
         animate.setAttribute('dur', dur + 's');
         animate.setAttribute('repeatCount', 'indefinite');
         animate.setAttribute('path', bezierD);
-        
+
         particle.appendChild(animate);
         svg.appendChild(particle);
       };
@@ -333,31 +340,33 @@ document.addEventListener('DOMContentLoaded', () => {
       const gads = getAnchor('wf-gads', isMobile ? 'bottom' : 'right');
       const meta = getAnchor('wf-meta', isMobile ? 'bottom' : 'right');
       const prepIn = getAnchor('wf-prep', isMobile ? 'top' : 'left');
-      
+
       createPath(gads, prepIn);
       createPath(meta, prepIn);
 
       const prepOut = getAnchor('wf-prep', isMobile ? 'bottom' : 'right');
       const bqIn = getAnchor('wf-bq', isMobile ? 'top' : 'left');
-      
+
       createPath(prepOut, bqIn);
 
       const bqOut = getAnchor('wf-bq', isMobile ? 'bottom' : 'right');
       const appsIn = getAnchor('wf-apps', isMobile ? 'top' : 'left');
       const sheetsIn = getAnchor('wf-sheets', isMobile ? 'top' : 'left');
-      
+
       createPath(bqOut, appsIn);
       createPath(bqOut, sheetsIn);
 
-      // Feedback Loop (Apps Script back to Google Ads)
+      // Feedback Loop (Apps Script back to Google Ads and Meta Ads)
       const appsOut = getAnchor('wf-apps', isMobile ? 'bottom' : 'bottom');
       const gadsFeedbackIn = getAnchor('wf-gads', isMobile ? 'left' : 'bottom');
+      const metaFeedbackIn = getAnchor('wf-meta', isMobile ? 'right' : 'bottom');
       createPath(appsOut, gadsFeedbackIn, true);
+      createPath(appsOut, metaFeedbackIn, true);
     };
 
     // Draw initially, using setTimeout to ensure fonts/layout are loaded
     setTimeout(drawPaths, 300);
-    
+
     // Redraw on resize
     let resizeTimer;
     window.addEventListener('resize', () => {

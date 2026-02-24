@@ -2068,6 +2068,7 @@ html.light-theme .hero-blob {
         scroll-behavior: auto;
     }
 }
+
 /* ============================================
    ROBUST WORKFLOW ARCHITECTURE (Animated)
    ============================================ */
@@ -2101,7 +2102,8 @@ html.light-theme .hero-blob {
 }
 
 .wf-path-feedback {
-    stroke: rgba(236, 72, 153, 0.4); /* Pinkish for feedback */
+    stroke: rgba(236, 72, 153, 0.4);
+    /* Pinkish for feedback */
 }
 
 .wf-particle {
@@ -2142,7 +2144,8 @@ html.light-theme .hero-blob {
 }
 
 /* Glassmorphism Containers & Nodes */
-.wf-node, .wf-glass-card {
+.wf-node,
+.wf-glass-card {
     background: rgba(26, 26, 36, 0.6);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -2153,7 +2156,8 @@ html.light-theme .hero-blob {
     position: relative;
 }
 
-.wf-node:hover, .wf-glass-card:hover {
+.wf-node:hover,
+.wf-glass-card:hover {
     transform: translateY(-2px);
     border-color: rgba(124, 58, 237, 0.4);
     box-shadow: 0 8px 25px rgba(124, 58, 237, 0.15);
@@ -2185,7 +2189,7 @@ html.light-theme .hero-blob {
 .wf-icon-group {
     display: flex;
     gap: 8px;
-    background: rgba(255,255,255,0.03);
+    background: rgba(255, 255, 255, 0.03);
     padding: 8px;
     border-radius: 50px;
 }
@@ -2243,18 +2247,31 @@ html.light-theme .hero-blob {
     opacity: 0.8;
     z-index: 2;
     background: rgba(17, 12, 28, 0.8);
-    padding: 4px 12px;
+    padding: 8px 16px;
     border-radius: 20px;
+    text-align: center;
+    width: max-content;
+    max-width: 90%;
+    line-height: 1.4;
 }
 
 /* Pulse animation for the nodes */
 @keyframes nodePulse {
-    0% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(124, 58, 237, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(124, 58, 237, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
+    }
 }
 
-.wf-node.active-pulse, .wf-glass-card.active-pulse {
+.wf-node.active-pulse,
+.wf-glass-card.active-pulse {
     animation: nodePulse 2s infinite;
     border-color: var(--accent-1);
 }
@@ -2264,16 +2281,19 @@ html.light-theme .hero-blob {
         flex-direction: column;
         gap: 40px;
     }
+
     .wf-layer {
         width: 100%;
         max-width: 400px;
         margin: 0 auto;
     }
+
     .workflow-architecture {
-        padding: 40px 20px 60px;
+        padding: 40px 20px 80px;
     }
+
     .wf-feedback-text {
-        bottom: 10px;
+        bottom: 15px;
         font-size: 0.65rem;
     }
 }
@@ -2282,17 +2302,17 @@ html.light-theme .hero-blob {
 html.light-theme .workflow-architecture {
     background: radial-gradient(circle at top left, #f3f0fc, #ffffff);
     border: 1px solid rgba(124, 58, 237, 0.15);
-    box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.05), 0 10px 30px rgba(0,0,0,0.02);
+    box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.05), 0 10px 30px rgba(0, 0, 0, 0.02);
 }
 
-html.light-theme .wf-node, 
+html.light-theme .wf-node,
 html.light-theme .wf-glass-card {
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(124, 58, 237, 0.1);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-html.light-theme .wf-node:hover, 
+html.light-theme .wf-node:hover,
 html.light-theme .wf-glass-card:hover {
     border-color: rgba(124, 58, 237, 0.4);
     box-shadow: 0 8px 25px rgba(124, 58, 237, 0.1);
@@ -2320,7 +2340,7 @@ html.light-theme .wf-feedback-text {
     background: rgba(255, 255, 255, 0.9);
     color: var(--accent-2);
     border: 1px solid rgba(236, 72, 153, 0.2);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 html.light-theme .wf-path {
@@ -2349,12 +2369,28 @@ html.light-theme .wf-layer-title {
 /* Fix mobile workflow layout overlapping */
 @media (max-width: 900px) {
     .workflow-grid {
-        gap: 60px; /* Increased gap */
+        gap: 60px;
+        /* Increased gap */
     }
+
+    .workflow-grid>.wf-layer:first-child {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        align-items: start;
+    }
+
+    .workflow-grid>.wf-layer:first-child .wf-layer-title {
+        grid-column: 1 / -1;
+    }
+
     .wf-layer {
-        gap: 30px; /* Increased gap between cards */
+        gap: 30px;
+        /* Increased gap between cards */
     }
+
     .workflow-architecture {
-        padding: 50px 20px 80px; /* More padding at bottom for feedback layer */
+        padding: 50px 20px 100px;
+        /* More padding at bottom for feedback layer */
     }
 }

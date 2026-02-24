@@ -292,20 +292,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let bezierD;
         
         if (isFeedback) {
-           const bottomY = containerRect.height - 40;
+           const bottomY = containerRect.height - 30; // Increased clearance for feedback layer text
            if (isMobile) {
-               // On mobile, just flow back up the side
-               bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 30} ${bottomY} L 20 ${bottomY} Q 10 ${bottomY} 10 ${end.y} L ${end.x - 10} ${end.y}`;
+               // On mobile, flow down to the bottom, curve left, go all the way up the left side, then curve right into the start node
+               bezierD = `M ${start.x} ${start.y} L ${start.x} ${bottomY} Q ${start.x} ${bottomY + 15} ${start.x - 20} ${bottomY + 15} L 20 ${bottomY + 15} Q 5 ${bottomY + 15} 5 ${bottomY} L 5 ${end.y} Q 5 ${end.y - 15} 20 ${end.y - 15} L ${end.x - 10} ${end.y - 15} Q ${end.x} ${end.y - 15} ${end.x} ${end.y}`;
            } else {
                // Standard feedback loop underneath
                bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 50} ${bottomY} L ${end.x + 50} ${bottomY} Q ${end.x} ${bottomY} ${end.x} ${end.y + 20}`;
            }
         } else if (isMobile) {
-            // Vertical flow
-            bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + 30}, ${end.x} ${end.y - 30}, ${end.x} ${end.y}`;
+            // Vertical flow - increase the curve control points for smoother S-curves on mobile and prevent overlapping straight lines
+            const deltaY = end.y - start.y;
+            bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + (deltaY * 0.4)}, ${end.x} ${end.y - (deltaY * 0.4)}, ${end.x} ${end.y}`;
         } else {
             // Horizontal flow
-            bezierD = `M ${start.x} ${start.y} C ${start.x + 50} ${start.y}, ${end.x - 50} ${end.y}, ${end.x} ${end.y}`;
+            bezierD = `M ${start.x} ${start.y} C ${start.x + 60} ${start.y}, ${end.x - 60} ${end.y}, ${end.x} ${end.y}`;
+        } ${start.y} C ${start.x + 50} ${start.y}, ${end.x - 50} ${end.y}, ${end.x} ${end.y}`;
         }
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');

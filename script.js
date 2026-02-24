@@ -307,7 +307,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Horizontal flow
             bezierD = `M ${start.x} ${start.y} C ${start.x + 60} ${start.y}, ${end.x - 60} ${end.y}, ${end.x} ${end.y}`;
-        } ${start.y} C ${start.x + 50} ${start.y}, ${end.x - 50} ${end.y}, ${end.x} ${end.y}`;
         }
 
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');

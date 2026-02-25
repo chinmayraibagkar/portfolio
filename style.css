@@ -2380,6 +2380,18 @@ html.light-theme .wf-layer-title {
         align-items: start;
     }
 
+    .workflow-grid>.wf-layer:first-child .wf-node {
+        flex-direction: column;
+        padding: 16px 10px;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .workflow-grid>.wf-layer:first-child .wf-node span {
+        font-size: 0.85rem;
+        line-height: 1.2;
+    }
+
     .workflow-grid>.wf-layer:first-child .wf-layer-title {
         grid-column: 1 / -1;
     }

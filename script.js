@@ -23,6 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
     html.classList.toggle('light-theme');
     const isLight = html.classList.contains('light-theme');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    
+    // Update dashboard charts if they exist
+    if (typeof updateMockDashboardTheme === 'function') {
+      updateMockDashboardTheme();
+    }
   });
 
   // ============================================
@@ -508,6 +513,150 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initDatalensAnimation();
+
+  // ============================================
+  // 8.7 MOCK DASHBOARD (Plotly.js)
+  // ============================================
+  function initMockDashboard() {
+    const lineChartContainer = document.getElementById('plotly-line');
+    const pieChartContainer = document.getElementById('plotly-pie');
+
+    // Make sure Plotly is loaded and elements exist
+    if (typeof Plotly === 'undefined' || !lineChartContainer || !pieChartContainer) return;
+
+    // Determine colors based on current theme (simple detection)
+    const isLight = document.documentElement.classList.contains('light-theme');
+    const textColor = isLight ? '#1f2937' : '#e2e8f0';
+    const gridColor = isLight ? '#e5e7eb' : 'rgba(255,255,255,0.1)';
+    const bgColor = 'rgba(0,0,0,0)';
+
+    // LINE CHART: Revenue vs Spend
+    const traceSpend = {
+      x: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      y: [28000, 31000, 29500, 36000],
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Spend (₹)',
+      line: { color: '#ef4444', width: 3 },
+      marker: { size: 8 }
+    };
+
+    const traceRevenue = {
+      x: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      y: [105000, 118000, 115000, 147200],
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Revenue (₹)',
+      line: { color: '#10b981', width: 3, dash: 'dot' },
+      marker: { size: 8 }
+    };
+
+    const lineLayout = {
+      title: { text: 'Spend vs Revenue (30d)', font: { color: textColor, size: 14 } },
+      paper_bgcolor: bgColor,
+      plot_bgcolor: bgColor,
+      font: { color: textColor },
+      margin: { l: 50, r: 20, t: 40, b: 40 },
+      xaxis: { showgrid: false },
+      yaxis: { gridcolor: gridColor },
+      legend: { orientation: 'h', y: -0.2 }
+    };
+
+    const lineConfig = { responsive: true, displayModeBar: false };
+
+    Plotly.newPlot('plotly-line', [traceSpend, traceRevenue], lineLayout, lineConfig);
+
+    // PIE CHART: Spend by Platform
+    const tracePie = {
+      values: [65000, 45000, 14500],
+      labels: ['Meta Ads', 'Google Ads', 'Other'],
+      type: 'pie',
+      hole: 0.6,
+      marker: {
+        colors: ['#3b82f6', '#10b981', '#f59e0b']
+      },
+      textinfo: 'percent',
+      textposition: 'inside',
+      hoverinfo: 'label+value+percent'
+    };
+
+    const pieLayout = {
+      title: { text: 'Spend by Platform', font: { color: textColor, size: 14 } },
+      paper_bgcolor: bgColor,
+      plot_bgcolor: bgColor,
+      font: { color: textColor },
+      margin: { l: 20, r: 20, t: 40, b: 20 },
+      showlegend: true,
+      legend: { orientation: 'h', y: -0.2 }
+    };
+
+    Plotly.newPlot('plotly-pie', [tracePie], pieLayout, lineConfig);
+
+    // BAR CHART: Top Campaigns by ROAS
+    const traceBar = {
+      x: ['Pmax (Google)', 'Advantage+ (Meta)', 'Retargeting (Meta)', 'Search Brand (Google)'],
+      y: [4.2, 3.8, 5.1, 2.9],
+      type: 'bar',
+      marker: {
+        color: ['#10b981', '#3b82f6', '#8b5cf6', '#ef4444'],
+        opacity: 0.8
+      },
+    };
+
+    const barLayout = {
+      title: { text: 'Top Campaigns by ROAS', font: { color: textColor, size: 14 } },
+      paper_bgcolor: bgColor,
+      plot_bgcolor: bgColor,
+      font: { color: textColor },
+      margin: { l: 40, r: 20, t: 40, b: 60 },
+      xaxis: { showgrid: false },
+      yaxis: { gridcolor: gridColor, title: 'ROAS' }
+    };
+
+    Plotly.newPlot('plotly-bar', [traceBar], barLayout, lineConfig);
+  }
+
+  // Attempt execution right away (Plotly might take a moment to load from CDN)
+  // so we check repeatedly for a second if needed
+  let plotlyCheckCount = 0;
+  const checkPlotly = setInterval(() => {
+    if (typeof Plotly !== 'undefined') {
+      clearInterval(checkPlotly);
+      initMockDashboard();
+    } else if (plotlyCheckCount > 20) {
+      clearInterval(checkPlotly); // Stop checking after 2 seconds
+    }
+    plotlyCheckCount++;
+  }, 100);
+
+  // Expose theme updater globally so the themeToggle listener can call it
+  window.updateMockDashboardTheme = function() {
+    const lineChartContainer = document.getElementById('plotly-line');
+    const pieChartContainer = document.getElementById('plotly-pie');
+    const barChartContainer = document.getElementById('plotly-bar');
+    
+    if (typeof Plotly === 'undefined' || !lineChartContainer || !pieChartContainer) return;
+
+    const isLight = document.documentElement.classList.contains('light-theme');
+    const textColor = isLight ? '#1f2937' : '#e2e8f0';
+    const gridColor = isLight ? '#e5e7eb' : 'rgba(255,255,255,0.1)';
+
+    const updateLayout = {
+      font: { color: textColor },
+      'title.font.color': textColor,
+    };
+
+    const updateAxis = {
+      'yaxis.gridcolor': gridColor
+    };
+
+    Plotly.relayout('plotly-line', { ...updateLayout, ...updateAxis });
+    Plotly.relayout('plotly-pie', updateLayout);
+    if(barChartContainer) {
+      Plotly.relayout('plotly-bar', { ...updateLayout, ...updateAxis });
+    }
+  };
+
 
   // ============================================
   // 9. GA4 SECTION VIEW TRACKING

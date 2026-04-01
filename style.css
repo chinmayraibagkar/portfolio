@@ -942,6 +942,8 @@ html.light-theme .hero-blob {
 .credential-card {
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .credential-card .credential-accent {
@@ -973,7 +975,7 @@ html.light-theme .hero-blob {
 .credential-meta {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .credential-meta span {
@@ -988,6 +990,40 @@ html.light-theme .hero-blob {
     width: 14px;
     height: 14px;
     opacity: 0.6;
+}
+
+.credential-actions {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.btn-credential {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    font-weight: 600;
+    padding: 8px 18px;
+    background: var(--gradient-subtle);
+    color: var(--accent-1);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    transition: all var(--transition-base);
+}
+
+.btn-credential:hover {
+    background: var(--gradient);
+    color: #fff;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+}
+
+.btn-credential svg {
+    width: 14px;
+    height: 14px;
 }
 
 /* Certifications */

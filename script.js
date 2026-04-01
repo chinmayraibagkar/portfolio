@@ -809,35 +809,6 @@ function closeCertModal(event) {
 }
 
 /* ============================================
-    Cookie Consent
-    ============================================ */
-function initCookieConsent() {
-  const consent = document.getElementById('cookieConsent');
-  if (!consent) return;
-
-  const hasConsent = localStorage.getItem('cookieConsent');
-  if (!hasConsent) {
-    setTimeout(() => consent.classList.add('visible'), 1000);
-  } else if (hasConsent === 'accepted' && typeof gtag === 'undefined') {
-    // User previously accepted but GA not loaded — nothing to do
-  }
-}
-
-function acceptCookies() {
-  localStorage.setItem('cookieConsent', 'accepted');
-  document.getElementById('cookieConsent').classList.remove('visible');
-}
-
-function declineCookies() {
-  localStorage.setItem('cookieConsent', 'declined');
-  document.getElementById('cookieConsent').classList.remove('visible');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  initCookieConsent();
-});
-
-/* ============================================
     Contact Form Honeypot Validation
     ============================================ */
 document.addEventListener('DOMContentLoaded', () => {

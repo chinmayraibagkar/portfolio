@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // 2. NAVBAR SCROLL EFFECT
+  // 2. NAVBAR SCROLL EFFECT & SCROLL PROGRESS
   // ============================================
   const nav = document.getElementById('nav');
   let lastScroll = 0;
@@ -52,6 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         backToTop.classList.remove('visible');
       }
+    }
+
+    // Scroll progress bar
+    const scrollProgress = document.getElementById('scrollProgress');
+    if (scrollProgress) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+      scrollProgress.style.width = scrollPercent + '%';
     }
 
     lastScroll = scrollY;
@@ -748,3 +756,100 @@ styleSheet.textContent = `
   }
 `;
 document.head.appendChild(styleSheet);
+
+/* ============================================
+    Resume Preview Modal
+    ============================================ */
+function openResumeModal() {
+  const modal = document.getElementById('resumeModal');
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'resume_preview', {
+      event_category: 'engagement',
+      event_label: 'Resume Preview'
+    });
+  }
+}
+
+function closeResumeModal(event) {
+  if (event && event.target !== event.currentTarget && event.type === 'click') return;
+  const modal = document.getElementById('resumeModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* Close modal on Escape key */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeResumeModal();
+    closeCertModal();
+  }
+});
+
+/* ============================================
+    Certificate Preview Modal
+    ============================================ */
+function openCertModal(pdfPath, event) {
+  if (event) event.stopPropagation();
+  const modal = document.getElementById('certModal');
+  const iframe = document.getElementById('certModalIframe');
+  iframe.src = pdfPath;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCertModal(event) {
+  if (event && event.target !== event.currentTarget && event.type === 'click') return;
+  const modal = document.getElementById('certModal');
+  const iframe = document.getElementById('certModalIframe');
+  modal.classList.remove('active');
+  iframe.src = '';
+  document.body.style.overflow = '';
+}
+
+/* ============================================
+    Cookie Consent
+    ============================================ */
+function initCookieConsent() {
+  const consent = document.getElementById('cookieConsent');
+  if (!consent) return;
+
+  const hasConsent = localStorage.getItem('cookieConsent');
+  if (!hasConsent) {
+    setTimeout(() => consent.classList.add('visible'), 1000);
+  } else if (hasConsent === 'accepted' && typeof gtag === 'undefined') {
+    // User previously accepted but GA not loaded — nothing to do
+  }
+}
+
+function acceptCookies() {
+  localStorage.setItem('cookieConsent', 'accepted');
+  document.getElementById('cookieConsent').classList.remove('visible');
+}
+
+function declineCookies() {
+  localStorage.setItem('cookieConsent', 'declined');
+  document.getElementById('cookieConsent').classList.remove('visible');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initCookieConsent();
+});
+
+/* ============================================
+    Contact Form Honeypot Validation
+    ============================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    const originalSubmit = contactForm.onsubmit;
+    contactForm.addEventListener('submit', (e) => {
+      const honeypot = contactForm.querySelector('input[name="website"]');
+      if (honeypot && honeypot.value) {
+        e.preventDefault();
+        return false;
+      }
+    }, true);
+  }
+});

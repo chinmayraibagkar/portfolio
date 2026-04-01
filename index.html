@@ -26,11 +26,18 @@
     gtag('config', 'G-6GHQ57J0SF');
   </script>
 
-  <!-- Plotly.js -->
-  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <!-- Performance: Preconnect to font/CDN origins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.plot.ly" />
+  <link rel="preconnect" href="https://cdn.simpleicons.org" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+
+  <!-- Plotly.js (deferred for performance) -->
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" defer></script>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -52,6 +59,12 @@
 </head>
 
 <body>
+
+  <!-- Skip to Content Link (Accessibility) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
   <!-- ============================================
        NAVIGATION
@@ -101,13 +114,17 @@
   <!-- ============================================
        HERO
        ============================================ -->
-  <section class="hero" id="hero">
+  <section class="hero" id="hero" role="banner">
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
     <div class="hero-blob hero-blob-3"></div>
 
-    <div class="container hero-content">
+    <div class="container hero-content" id="main-content">
       <p class="hero-pre">Hey, I'm</p>
+      <div class="availability-badge">
+        <span class="availability-dot"></span>
+        Open to opportunities
+      </div>
       <h1 class="hero-name">Chinmay<br />Raibagkar</h1>
       <p class="hero-tagline gradient-text">Performance Marketing Analyst</p>
       <p class="hero-description">
@@ -133,6 +150,14 @@
           </svg>
           Download Resume
         </a>
+        <button class="btn btn-outline" onclick="openResumeModal()" aria-label="Preview resume in browser">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+          Preview Resume
+        </button>
       </div>
     </div>
   </section>
@@ -267,6 +292,108 @@
           <div style="margin-top: 16px;">
             <span class="award-badge">🏆 Spotlight of the Month — Aug '24</span>
             <span class="award-badge">🏆 Best Turnaround Story — Q4 '24</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CAREER JOURNEY
+       ============================================ -->
+  <section class="career-journey" id="journey">
+    <div class="container">
+      <span class="section-label reveal">Career Path</span>
+      <h2 class="section-title reveal">My <span class="gradient-text">journey</span></h2>
+      <p class="section-subtitle reveal">From engineering student to performance marketing analyst — a path driven by data.</p>
+
+      <div class="journey-timeline stagger-children">
+        <div class="journey-line"></div>
+        <!-- Step 1: Education -->
+        <div class="journey-step reveal">
+          <div class="journey-year">2021</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>B.Tech Engineering</h4>
+            <p>Electronics & Telecommunication at Vishwakarma Institute of Technology, Pune</p>
+            <span class="journey-tag">Foundation</span>
+          </div>
+        </div>
+
+        <!-- Step 2: Leadership -->
+        <div class="journey-step reveal">
+          <div class="journey-year">2022–23</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>President & Coordinator</h4>
+            <p>Led The Investment Forum & E-Cell — organized events, managed teams, built networks</p>
+            <span class="journey-tag">Leadership</span>
+          </div>
+        </div>
+
+        <!-- Step 3: Patent -->
+        <div class="journey-step reveal">
+          <div class="journey-year">Nov 2023</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Patent Published</h4>
+            <p>Wireless Controlled Drainage Cleaning Robot — IoT & Robotics innovation</p>
+            <span class="journey-tag">Innovation</span>
+          </div>
+        </div>
+
+        <!-- Step 4: Internship -->
+        <div class="journey-step reveal">
+          <div class="journey-year">Jun 2024</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Joined Aristok Technologies</h4>
+            <p>Started as Business Analyst intern — managed Meta & Google Ads for Porter</p>
+            <span class="journey-tag">Career Start</span>
+          </div>
+        </div>
+
+        <!-- Step 5: Awards -->
+        <div class="journey-step reveal">
+          <div class="journey-year">2024</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Two Performance Awards</h4>
+            <p>Spotlight of the Month & Best Turnaround Story — reduced CAC from ₹750 to ₹400</p>
+            <span class="journey-tag">Recognition</span>
+          </div>
+        </div>
+
+        <!-- Step 6: Full-time -->
+        <div class="journey-step reveal">
+          <div class="journey-year">Jun 2025</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Analyst — Automation & Tech</h4>
+            <p>Promoted to full-time — built BigQuery pipelines, AI agents, and custom dashboards</p>
+            <span class="journey-tag">Growth</span>
+          </div>
+        </div>
+
+        <!-- Step 7: Publication -->
+        <div class="journey-step reveal">
+          <div class="journey-year">May 2025</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Springer Publication</h4>
+            <p>Automatic Number Plate Detection & Recognition — Computer Vision research</p>
+            <span class="journey-tag">Research</span>
+          </div>
+        </div>
+
+        <!-- Step 8: Current -->
+        <div class="journey-step reveal">
+          <div class="journey-year">2026</div>
+          <div class="journey-dot"></div>
+          <div class="journey-card">
+            <h4>Open to New Opportunities</h4>
+            <p>Ready to bring data-driven marketing expertise to the next challenge</p>
+            <span class="journey-tag">Next Chapter</span>
           </div>
         </div>
       </div>
@@ -698,17 +825,17 @@
         
         <!-- Post 1 -->
         <div class="glass-card reveal" style="padding: 0; overflow: hidden; display: block; border-radius: 12px; background: #ffffff; height: 600px;">
-          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7444730467318284288?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" style="border: none;"></iframe>
+          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7444730467318284288?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" loading="lazy" style="border: none;"></iframe>
         </div>
 
         <!-- Post 2 -->
         <div class="glass-card reveal" style="padding: 0; overflow: hidden; display: block; border-radius: 12px; background: #ffffff; height: 600px;">
-          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7431942963582197760?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" style="border: none;"></iframe>
+          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:share:7431942963582197760?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" loading="lazy" style="border: none;"></iframe>
         </div>
         
         <!-- Post 3 -->
         <div class="glass-card reveal" style="padding: 0; overflow: hidden; display: block; border-radius: 12px; background: #ffffff; height: 600px;">
-          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7433513219207380993?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" style="border: none;"></iframe>
+          <iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7433513219207380993?collapsed=1" height="100%" width="100%" frameborder="0" allowfullscreen="" title="Embedded post" loading="lazy" style="border: none;"></iframe>
         </div>
 
       </div>
@@ -742,10 +869,9 @@
                 rel="noopener noreferrer" class="btn-cert-verify" onclick="event.stopPropagation()">
                 Verify ↗
               </a>
-              <a href="assets/Certificates/AI-Powered Modern Marketing.pdf" target="_blank" class="btn-cert-verify"
-                onclick="event.stopPropagation()">
-                View PDF ↗
-              </a>
+              <button class="btn-cert-verify" onclick="openCertModal('assets/Certificates/AI-Powered Modern Marketing.pdf', event)">
+                Preview ↗
+              </button>
               <span class="cert-chevron">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -795,10 +921,9 @@
                 rel="noopener noreferrer" class="btn-cert-verify" onclick="event.stopPropagation()">
                 Verify ↗
               </a>
-              <a href="assets/Certificates/Google Digital Marketing & E-commerce.pdf" target="_blank"
-                class="btn-cert-verify" onclick="event.stopPropagation()">
-                View PDF ↗
-              </a>
+              <button class="btn-cert-verify" onclick="openCertModal('assets/Certificates/Google Digital Marketing & E-commerce.pdf', event)">
+                Preview ↗
+              </button>
               <span class="cert-chevron">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1167,11 +1292,26 @@
             </div>
             LinkedIn Profile
           </a>
+          <a href="https://github.com/chinmayraibagkar/" target="_blank"
+            rel="noopener noreferrer" class="contact-link-item">
+            <div class="contact-link-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+            </div>
+            GitHub Profile
+          </a>
         </div>
       </div>
 
       <form class="contact-form reveal" id="contactForm" action="https://formspree.io/f/xojnpeed" method="POST">
         <input type="hidden" name="_subject" value="Portfolio Contact Form Submission" />
+        <!-- Honeypot field for spam protection (hidden from real users) -->
+        <div class="honey" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="form-group">
           <label for="name">Your Name</label>
           <input type="text" id="name" name="name" placeholder="John Doe" required />
@@ -1220,6 +1360,13 @@
             <polyline points="22,6 12,13 2,6" />
           </svg>
         </a>
+        <a href="https://github.com/chinmayraibagkar/" target="_blank"
+          rel="noopener noreferrer" class="footer-social" aria-label="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
       </div>
       <p>© 2026 Chinmay Raibagkar.</p>
     </div>
@@ -1233,7 +1380,44 @@
     </svg>
   </button>
 
-  <script src="script.js?v=2"></script>
+  <!-- Resume Preview Modal -->
+  <div class="modal-overlay" id="resumeModal" onclick="closeResumeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeResumeModal()" aria-label="Close resume preview">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <iframe src="assets/Resume_Chinmay_Analyst_.pdf" title="Resume Preview"></iframe>
+    </div>
+  </div>
+
+  <!-- Certificate Preview Modal -->
+  <div class="modal-overlay" id="certModal" onclick="closeCertModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeCertModal()" aria-label="Close certificate preview">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
+      <iframe id="certModalIframe" src="" title="Certificate Preview"></iframe>
+    </div>
+  </div>
+
+  <!-- Cookie Consent Banner -->
+  <div class="cookie-consent" id="cookieConsent">
+    <p>This site uses cookies to analyze traffic and improve your experience.</p>
+    <div class="cookie-actions">
+      <button class="btn-cookie btn-cookie-accept" onclick="acceptCookies()">Accept</button>
+      <button class="btn-cookie btn-cookie-decline" onclick="declineCookies()">Decline</button>
+    </div>
+  </div>
+
+  <script src="script.js?v=3"></script>
 </body>
 
 </html>

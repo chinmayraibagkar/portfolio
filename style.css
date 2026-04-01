@@ -2406,3 +2406,563 @@ html.light-theme .wf-layer-title {
         /* More padding at bottom for feedback layer */
     }
 }
+
+/* ============================================
+   DATALENS AI ARCHITECTURE (Animated)
+   ============================================ */
+.dl-architecture {
+    position: relative;
+    background: radial-gradient(circle at top right, #0c1a2e, #0d0f1a 40%, #1a0e2e);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 60px 40px;
+    margin-bottom: 40px;
+    min-height: 380px;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.dl-svg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* SVG Paths & Particles */
+.dl-path {
+    fill: none;
+    stroke: rgba(99, 102, 241, 0.3);
+    stroke-width: 1.5;
+    stroke-dasharray: 5, 5;
+}
+
+.dl-path-feedback {
+    stroke: rgba(6, 182, 212, 0.35);
+}
+
+.dl-particle {
+    fill: #6366f1;
+    filter: drop-shadow(0 0 5px #6366f1) drop-shadow(0 0 10px #6366f1);
+}
+
+.dl-particle-feedback {
+    fill: #06b6d4;
+    filter: drop-shadow(0 0 5px #06b6d4) drop-shadow(0 0 10px #06b6d4);
+}
+
+/* Grid Layout */
+.dl-grid {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
+}
+
+.dl-layer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+}
+
+.dl-layer-title {
+    color: #8b8fa3;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: -4px;
+    opacity: 0.85;
+    font-family: var(--font-mono);
+}
+
+/* Node Styles */
+.dl-node,
+.dl-glass-card {
+    background: rgba(22, 24, 40, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.dl-node:hover,
+.dl-glass-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 28px rgba(99, 102, 241, 0.15);
+}
+
+.dl-node {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+.dl-node-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.dl-node-label {
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: #e2e8f0;
+}
+
+/* User Query Node — special style */
+.dl-node-user {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 20px 16px;
+    border-color: rgba(99, 102, 241, 0.15);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(99, 102, 241, 0.02));
+}
+
+.dl-node-user .dl-node-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.6rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.dl-node-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dl-node-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #e2e8f0;
+}
+
+.dl-node-desc {
+    font-size: 0.75rem;
+    color: #8b8fa3;
+}
+
+/* Glass Card (Agent & Output) */
+.dl-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+.dl-icon-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 8px 14px;
+    border-radius: 50px;
+}
+
+.dl-card-title {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: #e2e8f0;
+}
+
+.dl-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dl-pill {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    color: #b0b4c8;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.dl-pill:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: #e2e8f0;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Feedback Layer Text */
+.dl-feedback-text {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.73rem;
+    color: #06b6d4;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    opacity: 0.85;
+    z-index: 2;
+    background: rgba(13, 15, 26, 0.85);
+    padding: 8px 18px;
+    border-radius: 20px;
+    text-align: center;
+    width: max-content;
+    max-width: 90%;
+    line-height: 1.4;
+    font-family: var(--font-mono);
+    border: 1px solid rgba(6, 182, 212, 0.15);
+}
+
+/* Pulse animation for DataLens nodes */
+@keyframes dlNodePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.35);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+}
+
+.dl-node.active-pulse,
+.dl-glass-card.active-pulse {
+    animation: dlNodePulse 2.5s infinite;
+    border-color: rgba(99, 102, 241, 0.35);
+}
+
+/* ============================================
+   DATALENS TECH STACK
+   ============================================ */
+.dl-tech-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.dl-tech-label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.dl-tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.dl-tech-pill {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid color-mix(in srgb, var(--pill-color) 30%, transparent);
+    color: color-mix(in srgb, var(--pill-color) 60%, var(--text-secondary));
+    transition: all var(--transition-fast);
+    backdrop-filter: blur(4px);
+    user-select: none;
+}
+
+.dl-tech-pill-wrap {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-base);
+}
+
+.dl-tech-pill {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid color-mix(in srgb, var(--pill-color) 30%, transparent);
+    color: color-mix(in srgb, var(--pill-color) 60%, var(--text-secondary));
+    transition: all var(--transition-fast);
+    backdrop-filter: blur(4px);
+    user-select: none;
+}
+
+.dl-tech-pill-wrap {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-base);
+}
+
+.dl-tech-pill-wrap:hover .dl-tech-pill,
+.dl-tech-pill-wrap.open .dl-tech-pill {
+    background: color-mix(in srgb, var(--pill-color) 12%, transparent);
+    border-color: color-mix(in srgb, var(--pill-color) 50%, transparent);
+    color: color-mix(in srgb, var(--pill-color) 90%, white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--pill-color) 20%, transparent);
+}
+
+.dl-tech-desc {
+    display: none;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding: 12px 16px;
+    margin-top: 10px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--pill-color) 8%, var(--bg-card));
+    border: 1px solid color-mix(in srgb, var(--pill-color) 20%, var(--glass-border));
+    backdrop-filter: blur(10px);
+    animation: dlDescFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 350px; /* Slightly wider for better readability */
+}
+
+.dl-tech-desc a {
+    display: inline-block;
+    margin-left: 8px;
+    color: var(--accent-1);
+    font-weight: 600;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.dl-tech-desc a:hover {
+    color: var(--accent-2);
+}
+
+.dl-tech-pill-wrap.open .dl-tech-desc {
+    display: block;
+    /* Pushes content below naturally like the toolkit section */
+}
+
+@keyframes dlDescFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Ensure descriptions look good on mobile and wrap correctly */
+@media (max-width: 768px) {
+    .dl-tech-desc {
+        max-width: 100%;
+        margin-top: 8px;
+    }
+    
+    .dl-tech-pills {
+        gap: 10px;
+    }
+    
+    /* Optional: make the open pill take full width on small screens to avoid awkward wraps */
+    .dl-tech-pill-wrap.open {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   DATALENS LIGHT THEME OVERRIDES
+   ============================================ */
+html.light-theme .dl-architecture {
+    background: radial-gradient(circle at top right, #eef2ff, #f8f6ff 40%, #f3f0fc);
+    border: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: inset 0 0 30px rgba(99, 102, 241, 0.04), 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+html.light-theme .dl-node,
+html.light-theme .dl-glass-card {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+html.light-theme .dl-node:hover,
+html.light-theme .dl-glass-card:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+html.light-theme .dl-node-user {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(99, 102, 241, 0.01));
+}
+
+html.light-theme .dl-node-label,
+html.light-theme .dl-node-title,
+html.light-theme .dl-card-title {
+    color: var(--text-primary);
+}
+
+html.light-theme .dl-node-desc {
+    color: var(--text-muted);
+}
+
+html.light-theme .dl-icon-group,
+html.light-theme .dl-node-icon {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+html.light-theme .dl-pill {
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    color: var(--text-secondary);
+}
+
+html.light-theme .dl-pill:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--text-primary);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+html.light-theme .dl-feedback-text {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0891b2;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+html.light-theme .dl-path {
+    stroke: rgba(99, 102, 241, 0.2);
+}
+
+html.light-theme .dl-path-feedback {
+    stroke: rgba(6, 182, 212, 0.2);
+}
+
+html.light-theme .dl-particle {
+    fill: #6366f1;
+    filter: drop-shadow(0 0 4px #6366f1);
+}
+
+html.light-theme .dl-particle-feedback {
+    fill: #06b6d4;
+    filter: drop-shadow(0 0 4px #06b6d4);
+}
+
+html.light-theme .dl-layer-title {
+    color: #6366f1;
+    font-weight: 600;
+}
+
+html.light-theme .dl-tech-pill {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* ============================================
+   DATALENS RESPONSIVE
+   ============================================ */
+@media (max-width: 900px) {
+    .dl-grid {
+        flex-direction: column;
+        gap: 48px;
+    }
+
+    .dl-layer {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Data Sources: 3-column grid on mobile */
+    .dl-layer:nth-child(3) {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        max-width: 100%;
+    }
+
+    .dl-layer:nth-child(3) .dl-layer-title {
+        grid-column: 1 / -1;
+    }
+
+    .dl-layer:nth-child(3) .dl-node {
+        flex-direction: column;
+        padding: 14px 8px;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .dl-layer:nth-child(3) .dl-node .dl-node-label {
+        font-size: 0.8rem;
+        line-height: 1.2;
+    }
+
+    .dl-architecture {
+        padding: 40px 20px 80px;
+    }
+
+    .dl-feedback-text {
+        bottom: 14px;
+        font-size: 0.62rem;
+        letter-spacing: 1.2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dl-architecture {
+        padding: 30px 14px 70px;
+    }
+
+    .dl-layer:nth-child(3) {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+    }
+
+    .dl-layer:nth-child(3) .dl-node {
+        padding: 10px 6px;
+    }
+
+    .dl-layer:nth-child(3) .dl-node .dl-node-icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .dl-layer:nth-child(3) .dl-node .dl-node-label {
+        font-size: 0.72rem;
+    }
+
+    .dl-tech-pills {
+        gap: 6px;
+    }
+
+    .dl-tech-pill {
+        font-size: 0.7rem;
+        padding: 5px 12px;
+    }
+
+    .dl-feedback-text {
+        font-size: 0.55rem;
+        padding: 6px 12px;
+        letter-spacing: 1px;
+    }
+}

@@ -386,6 +386,130 @@ document.addEventListener('DOMContentLoaded', () => {
   initWorkflowAnimation();
 
   // ============================================
+  // 8.6 DATALENS AI ARCHITECTURE (Animated SVG)
+  // ============================================
+  function initDatalensAnimation() {
+    const container = document.getElementById('datalensArchitecture');
+    const svg = document.getElementById('dlSvg');
+    if (!container || !svg) return;
+
+    const drawPaths = () => {
+      svg.innerHTML = '';
+      const containerRect = container.getBoundingClientRect();
+      const isMobile = window.innerWidth <= 900;
+
+      const getAnchor = (id, side = 'center') => {
+        const el = document.getElementById(id);
+        if (!el) return { x: 0, y: 0 };
+        const rect = el.getBoundingClientRect();
+
+        let x = rect.left - containerRect.left;
+        let y = rect.top - containerRect.top;
+
+        if (side === 'right') x += rect.width;
+        else if (side === 'center' || side === 'top' || side === 'bottom') x += rect.width / 2;
+
+        if (side === 'bottom') y += rect.height;
+        else if (side === 'center' || side === 'left' || side === 'right') y += rect.height / 2;
+
+        if (side === 'right') x += 2;
+        if (side === 'left') x -= 2;
+        if (side === 'bottom') y += 2;
+        if (side === 'top') y -= 2;
+
+        return { x, y };
+      };
+
+      const createPath = (start, end, isFeedback = false) => {
+        let bezierD;
+
+        if (isFeedback) {
+          if (isMobile) {
+            // Feedback loop on mobile: go left side, then curve up
+            const leftX = 8;
+            bezierD = `M ${start.x} ${start.y} L ${start.x} ${start.y + 20} Q ${start.x} ${start.y + 35} ${start.x - 20} ${start.y + 35} L ${leftX + 15} ${start.y + 35} Q ${leftX} ${start.y + 35} ${leftX} ${start.y + 20} L ${leftX} ${end.y} Q ${leftX} ${end.y - 15} ${leftX + 15} ${end.y - 15} L ${end.x - 10} ${end.y - 15} Q ${end.x} ${end.y - 15} ${end.x} ${end.y}`;
+          } else {
+            // Feedback loop on desktop: go below the diagram
+            const bottomY = containerRect.height - 30;
+            bezierD = `M ${start.x} ${start.y} Q ${start.x} ${bottomY} ${start.x - 60} ${bottomY} L ${end.x + 60} ${bottomY} Q ${end.x} ${bottomY} ${end.x} ${end.y + 20}`;
+          }
+        } else if (isMobile) {
+          const deltaY = end.y - start.y;
+          bezierD = `M ${start.x} ${start.y} C ${start.x} ${start.y + (deltaY * 0.4)}, ${end.x} ${end.y - (deltaY * 0.4)}, ${end.x} ${end.y}`;
+        } else {
+          bezierD = `M ${start.x} ${start.y} C ${start.x + 60} ${start.y}, ${end.x - 60} ${end.y}, ${end.x} ${end.y}`;
+        }
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', bezierD);
+        path.setAttribute('class', isFeedback ? 'dl-path dl-path-feedback' : 'dl-path');
+        svg.appendChild(path);
+
+        const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        particle.setAttribute('r', isFeedback ? '2.5' : '3');
+        particle.setAttribute('class', isFeedback ? 'dl-particle dl-particle-feedback' : 'dl-particle');
+
+        const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+        const dur = isFeedback ? (Math.random() * 2 + 5) : (Math.random() * 1.5 + 2.5);
+        animate.setAttribute('dur', dur + 's');
+        animate.setAttribute('repeatCount', 'indefinite');
+        animate.setAttribute('path', bezierD);
+
+        particle.appendChild(animate);
+        svg.appendChild(particle);
+      };
+
+      // Connections: User → Agent
+      const userOut = getAnchor('dl-user', isMobile ? 'bottom' : 'right');
+      const agentIn = getAnchor('dl-agent', isMobile ? 'top' : 'left');
+      createPath(userOut, agentIn);
+
+      // Connections: Agent → Data Sources (BQ, GAds, Meta)
+      const agentOut = getAnchor('dl-agent', isMobile ? 'bottom' : 'right');
+      const bqIn = getAnchor('dl-bq', isMobile ? 'top' : 'left');
+      const gadsIn = getAnchor('dl-gads', isMobile ? 'top' : 'left');
+      const metaIn = getAnchor('dl-meta', isMobile ? 'top' : 'left');
+
+      createPath(agentOut, bqIn);
+      createPath(agentOut, gadsIn);
+      createPath(agentOut, metaIn);
+
+      // Connections: Data Sources → Output
+      const bqOut = getAnchor('dl-bq', isMobile ? 'bottom' : 'right');
+      const gadsOut = getAnchor('dl-gads', isMobile ? 'bottom' : 'right');
+      const metaOut = getAnchor('dl-meta', isMobile ? 'bottom' : 'right');
+      const outputIn = getAnchor('dl-output', isMobile ? 'top' : 'left');
+
+      createPath(bqOut, outputIn);
+      createPath(gadsOut, outputIn);
+      createPath(metaOut, outputIn);
+
+      // Feedback Loop: Output → Agent (agentic retry)
+      const outputFeedback = getAnchor('dl-output', isMobile ? 'bottom' : 'bottom');
+      const agentFeedback = getAnchor('dl-agent', isMobile ? 'left' : 'bottom');
+      createPath(outputFeedback, agentFeedback, true);
+    };
+
+    setTimeout(drawPaths, 400);
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawPaths, 200);
+    });
+
+    // Sequential pulse on DataLens nodes
+    const dlNodes = container.querySelectorAll('.dl-node, .dl-glass-card');
+    let delay = 0;
+    dlNodes.forEach(node => {
+      setTimeout(() => node.classList.add('active-pulse'), delay);
+      delay += 600;
+    });
+  }
+
+  initDatalensAnimation();
+
+  // ============================================
   // 9. GA4 SECTION VIEW TRACKING
   // ============================================
   if (typeof gtag !== 'undefined') {
@@ -437,6 +561,15 @@ function toggleSkill(wrapEl) {
   // Close any other open skill in the same category
   const parentCategory = wrapEl.closest('.skill-category');
   parentCategory.querySelectorAll('.skill-tag-wrap.open').forEach(open => {
+    if (open !== wrapEl) open.classList.remove('open');
+  });
+  wrapEl.classList.toggle('open');
+}
+
+/** Toggle tech pill description in DataLens section */
+function toggleTechPill(wrapEl) {
+  const container = wrapEl.closest('.dl-tech-pills');
+  container.querySelectorAll('.dl-tech-pill-wrap.open').forEach(open => {
     if (open !== wrapEl) open.classList.remove('open');
   });
   wrapEl.classList.toggle('open');

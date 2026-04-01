@@ -243,7 +243,202 @@
     <div class="container">
       <span class="section-label reveal">Work Samples</span>
       <h2 class="section-title reveal">Real-world <span class="gradient-text">impact</span></h2>
-      <p class="section-subtitle reveal">Projects and solutions built at Aristok Technologies.</p>
+      <p class="section-subtitle reveal">Projects and solutions I've built — from data pipelines to AI agents.</p>
+
+      <!-- DataLens AI Agent -->
+      <div class="glass-card work-card reveal">
+        <div class="work-card-header">
+          <div class="work-card-icon">🤖</div>
+          <div>
+            <h3>DataLens AI — Conversational Data Agent</h3>
+            <p class="work-card-sub">Chat with your data across BigQuery, Google Ads & Meta Ads</p>
+          </div>
+        </div>
+
+        <div class="work-card-body">
+          <div class="work-problem-solution">
+            <div class="work-block">
+              <span class="work-block-label">🔴 Problem</span>
+              <p>Marketing analysts spent hours writing SQL, switching between ad platforms, and manually assembling
+                reports. Non-technical stakeholders couldn't access data without going through analysts — creating
+                bottlenecks across siloed data sources.</p>
+            </div>
+            <div class="work-block">
+              <span class="work-block-label">🟢 Solution</span>
+              <p>Built an AI-powered conversational agent that autonomously discovers schemas, writes & executes SQL,
+                pulls live data from ad platforms, and generates interactive visualizations — all through natural
+                language chat.</p>
+            </div>
+          </div>
+
+          <!-- Animated Agentic Architecture -->
+          <div class="dl-architecture" id="datalensArchitecture">
+            <svg class="dl-svg-overlay" id="dlSvg"></svg>
+            <div class="dl-grid">
+
+              <!-- Layer 1: Input -->
+              <div class="dl-layer">
+                <div class="dl-layer-title">Input</div>
+                <div class="dl-node dl-node-user" id="dl-user">
+                  <div class="dl-node-icon">💬</div>
+                  <div class="dl-node-content">
+                    <span class="dl-node-title">Natural Language Query</span>
+                    <span class="dl-node-desc">Ask anything about your data</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Layer 2: Intelligence -->
+              <div class="dl-layer">
+                <div class="dl-layer-title">AI Engine</div>
+                <div class="dl-glass-card" id="dl-agent">
+                  <div class="dl-card-header">
+                    <div class="dl-icon-group">
+                      <img src="https://cdn.simpleicons.org/google/4285F4" alt="Gemini" width="18" height="18">
+                      <img src="https://cdn.simpleicons.org/anthropic/D97706" alt="Claude" width="18" height="18">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" alt="OpenAI" width="18" height="18" style="filter: brightness(0) invert(1);">
+                    </div>
+                    <span class="dl-card-title">Agentic Reasoning</span>
+                  </div>
+                  <div class="dl-pills">
+                    <div class="dl-pill">Multi-LLM Router</div>
+                    <div class="dl-pill">Tool Selection</div>
+                    <div class="dl-pill">Auto-Retry Logic</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Layer 3: Data Sources -->
+              <div class="dl-layer">
+                <div class="dl-layer-title">Data Sources</div>
+                <div class="dl-node" id="dl-bq">
+                  <div class="dl-node-icon"><img src="https://cdn.simpleicons.org/googlebigquery/4285F4" alt="BigQuery"
+                      width="22" height="22"></div>
+                  <span class="dl-node-label">BigQuery (CRM / Backend)</span>
+                </div>
+                <div class="dl-node" id="dl-gads">
+                  <div class="dl-node-icon"><img
+                      src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Google_Ads_logo.svg" alt="Google Ads"
+                      width="22" height="22"></div>
+                  <span class="dl-node-label">Google Ads</span>
+                </div>
+                <div class="dl-node" id="dl-meta">
+                  <div class="dl-node-icon"><img src="https://cdn.simpleicons.org/meta/1877F2" alt="Meta" width="22"
+                      height="22"></div>
+                  <span class="dl-node-label">Meta Ads</span>
+                </div>
+              </div>
+
+              <!-- Layer 4: Output -->
+              <div class="dl-layer">
+                <div class="dl-layer-title">Output</div>
+                <div class="dl-glass-card" id="dl-output">
+                  <div class="dl-card-header">
+                    <div class="dl-icon-group">
+                      <span style="font-size:1rem;">📊</span>
+                      <span style="font-size:1rem;">📈</span>
+                      <span style="font-size:1rem;">📋</span>
+                    </div>
+                    <span class="dl-card-title">Insights & Visuals</span>
+                  </div>
+                  <div class="dl-pills">
+                    <div class="dl-pill">Markdown Analysis</div>
+                    <div class="dl-pill">Plotly.js Charts</div>
+                    <div class="dl-pill">CSV / Excel Export</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="dl-feedback-text">Agentic Loop (Up to 15 autonomous tool iterations per query)</div>
+          </div>
+
+          <div class="dl-tech-stack" id="dl-tech-stack">
+            <span class="dl-tech-label">Built With</span>
+            <div class="dl-tech-pills">
+              <!-- Next.js -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #FFFFFF;">Next.js 16</span>
+                <div class="dl-tech-desc">
+                  Modern React framework for high-performance frontend and server-side logic.
+                  <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- React -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #61DAFB;">React 19</span>
+                <div class="dl-tech-desc">
+                  Core UI library for building dynamic, state-driven components.
+                  <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- Zustand -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #764ABC;">Zustand</span>
+                <div class="dl-tech-desc">
+                  Lightweight state management for seamless session and data handling.
+                  <a href="https://zustand-demo.pmnd.rs/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- Plotly.js -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #3F4F75;">Plotly.js</span>
+                <div class="dl-tech-desc">
+                  Powerful charting library for interactive, publication-quality visualizations.
+                  <a href="https://plotly.com/javascript/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- BigQuery -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #4285F4;">BigQuery REST API</span>
+                <div class="dl-tech-desc">
+                  Direct cloud data access for high-speed SQL execution and processing of CRM and backend data.
+                  <a href="https://cloud.google.com/bigquery/docs/reference/rest" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- Meta API -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #1877F2;">Meta Marketing API</span>
+                <div class="dl-tech-desc">
+                  Programmatic access to real-time Facebook and Instagram ad performance.
+                  <a href="https://developers.facebook.com/docs/marketing-apis/" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- Google Ads -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #34A853;">Google Ads API v23</span>
+                <div class="dl-tech-desc">
+                  Scalable integration for fetching cross-account campaign data.
+                  <a href="https://developers.google.com/google-ads/api/docs/start" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+              <!-- SSE Streaming -->
+              <div class="dl-tech-pill-wrap" onclick="toggleTechPill(this)">
+                <span class="dl-tech-pill" style="--pill-color: #FF6B35;">SSE Streaming</span>
+                <div class="dl-tech-desc">
+                  Server-Sent Events for real-time, low-latency AI response delivery.
+                  <a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener noreferrer">Docs ↗</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Impact Metrics -->
+          <div class="work-metrics">
+            <div class="work-metric">
+              <span class="work-metric-value">15+</span>
+              <span class="work-metric-label">AI models supported</span>
+            </div>
+            <div class="work-metric">
+              <span class="work-metric-value">3</span>
+              <span class="work-metric-label">Data sources integrated</span>
+            </div>
+            <div class="work-metric">
+              <span class="work-metric-value">0 SQL</span>
+              <span class="work-metric-label">Lines needed by the user</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- BigQuery Case Study -->
       <div class="glass-card work-card reveal">

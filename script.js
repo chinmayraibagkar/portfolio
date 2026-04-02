@@ -563,11 +563,11 @@ document.addEventListener('DOMContentLoaded', () => {
       title: { text: 'Spend vs Revenue (30d)', font: { color: textColor, size: 14 } },
       paper_bgcolor: bgColor,
       plot_bgcolor: bgColor,
-      font: { color: textColor },
-      margin: { l: 50, r: 20, t: 40, b: 40 },
-      xaxis: { showgrid: false },
-      yaxis: { gridcolor: gridColor },
-      legend: { orientation: 'h', y: -0.2 }
+      font: { color: textColor, size: 11 },
+      margin: { l: 40, r: 25, t: 40, b: 80 },
+      xaxis: { showgrid: false, automargin: true },
+      yaxis: { gridcolor: gridColor, automargin: true },
+      legend: { orientation: 'h', y: -0.3, font: { size: 10 } }
     };
 
     const lineConfig = { responsive: true, displayModeBar: false };
@@ -592,10 +592,10 @@ document.addEventListener('DOMContentLoaded', () => {
       title: { text: 'Spend by Platform', font: { color: textColor, size: 14 } },
       paper_bgcolor: bgColor,
       plot_bgcolor: bgColor,
-      font: { color: textColor },
-      margin: { l: 20, r: 20, t: 40, b: 20 },
+      font: { color: textColor, size: 11 },
+      margin: { l: 30, r: 30, t: 50, b: 80 },
       showlegend: true,
-      legend: { orientation: 'h', y: -0.2 }
+      legend: { orientation: 'h', y: -0.3, font: { size: 10 } }
     };
 
     Plotly.newPlot('plotly-pie', [tracePie], pieLayout, lineConfig);
@@ -615,10 +615,10 @@ document.addEventListener('DOMContentLoaded', () => {
       title: { text: 'Top Campaigns by ROAS', font: { color: textColor, size: 14 } },
       paper_bgcolor: bgColor,
       plot_bgcolor: bgColor,
-      font: { color: textColor },
-      margin: { l: 40, r: 20, t: 40, b: 60 },
-      xaxis: { showgrid: false },
-      yaxis: { gridcolor: gridColor, title: 'ROAS' }
+      font: { color: textColor, size: 11 },
+      margin: { l: 40, r: 25, t: 40, b: 100 },
+      xaxis: { showgrid: false, automargin: true },
+      yaxis: { gridcolor: gridColor, title: 'ROAS', automargin: true }
     };
 
     Plotly.newPlot('plotly-bar', [traceBar], barLayout, lineConfig);

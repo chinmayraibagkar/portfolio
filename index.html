@@ -752,45 +752,45 @@
           <p style="margin-bottom: 24px; color: var(--text-secondary);">An interactive, automated dashboard pulling simulated data from Meta and Google Ads, calculating blended ROAS, Spend, and Revenue in real-time. Try hovering over the charts below (Built with Plotly.js).</p>
           
           <!-- Mock Dashboard UI -->
-          <div class="mock-dashboard glass-card" id="mockDashboard" style="padding: 24px; margin-top: 16px;">
+          <div class="mock-dashboard glass-card" id="mockDashboard">
             
             <!-- KPIs -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin-bottom: 24px;">
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Spend (30d)</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #10b981;">₹1,24,500</div>
+            <div class="dashboard-kpi-grid">
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">Spend (30d)</div>
+                <div class="kpi-value" style="color: #10b981;">₹1,24,500</div>
               </div>
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Revenue</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #3b82f6;">₹4,85,200</div>
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">Revenue</div>
+                <div class="kpi-value" style="color: #3b82f6;">₹4,85,200</div>
               </div>
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Blended ROAS</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #f59e0b;">3.90x</div>
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">Blended ROAS</div>
+                <div class="kpi-value" style="color: #f59e0b;">3.90x</div>
               </div>
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">CAC</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #ef4444;">₹345</div>
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">CAC</div>
+                <div class="kpi-value" style="color: #ef4444;">₹345</div>
               </div>
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">CTR</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #8b5cf6;">1.84%</div>
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">CTR</div>
+                <div class="kpi-value" style="color: #8b5cf6;">1.84%</div>
               </div>
-              <div class="glass-card" style="padding: 16px; text-align: center;">
-                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Conversions</div>
-                <div style="font-size: 1.4rem; font-weight: 700; color: #06b6d4;">1,406</div>
+              <div class="glass-card kpi-card">
+                <div class="kpi-label">Conversions</div>
+                <div class="kpi-value" style="color: #06b6d4;">1,406</div>
               </div>
             </div>
 
             <!-- Chart Area Row 1 -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
-              <div id="plotly-line" class="glass-card" style="padding: 10px; height: 320px;"></div>
-              <div id="plotly-pie" class="glass-card" style="padding: 10px; height: 320px;"></div>
+            <div class="dashboard-chart-grid">
+              <div id="plotly-line" class="glass-card chart-container"></div>
+              <div id="plotly-pie" class="glass-card chart-container"></div>
             </div>
 
             <!-- Chart Area Row 2 -->
-            <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
-              <div id="plotly-bar" class="glass-card" style="padding: 10px; height: 260px;"></div>
+            <div class="dashboard-chart-full">
+              <div id="plotly-bar" class="glass-card chart-container-bar"></div>
             </div>
 
           </div>

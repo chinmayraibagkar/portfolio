@@ -461,7 +461,7 @@ html.light-theme .theme-toggle .icon-moon {
     align-items: center;
     position: relative;
     overflow: hidden;
-    padding: 0;
+    padding: var(--nav-height) 0 0;
 }
 
 /* Animated gradient blobs */

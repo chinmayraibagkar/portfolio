@@ -606,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
       y: [4.2, 3.8, 5.1, 2.9],
       type: 'bar',
       marker: {
-        color: ['#10b981', '#3b82f6', '#8b5cf6', '#ef4444'],
+        color: ['#14b8a6', '#3b82f6', '#06b6d4', '#ef4444'],
         opacity: 0.8
       },
     };

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chinmay Raibagkar — Marketing Analyst | Resume</title>
+  <meta name="description"
+    content="Resume of Chinmay Raibagkar — Marketing Analyst specializing in data analytics, automation, and performance marketing (SQL, Python, BigQuery, GCP, Looker Studio, MySQL)." />
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" />
+
+  <style>
+    :root {
+      --accent: #0E7490;
+      --accent-2: #2563EB;
+      --ink: #16202B;
+      --ink-soft: #3d4a57;
+      --ink-muted: #64707d;
+      --rule: #dfe7ec;
+      --paper: #ffffff;
+      --chip-bg: #ecf7fb;
+      --chip-border: #cfe8f1;
+      --gradient: linear-gradient(120deg, #14B8A6, #06B6D4 55%, #3B82F6);
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: #071018;
+      background-image:
+        radial-gradient(50rem 30rem at 85% -10%, rgba(20, 184, 166, 0.22), transparent 60%),
+        radial-gradient(45rem 30rem at 0% 15%, rgba(59, 130, 246, 0.16), transparent 55%);
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      padding: 96px 20px 64px;
+      min-height: 100vh;
+    }
+
+    /* ---------- Floating toolbar ---------- */
+    .toolbar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(9, 18, 26, 0.75);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .tb-btn {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #EAF6FA;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tb-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .tb-btn.primary {
+      background: var(--gradient);
+      box-shadow: 0 4px 18px rgba(6, 182, 212, 0.35);
+    }
+
+    .tb-btn.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(6, 182, 212, 0.5);
+    }
+
+    .tb-btn.ghost {
+      border-color: rgba(255, 255, 255, 0.14);
+      color: #BFD6DE;
+    }
+
+    .tb-btn.ghost:hover {
+      border-color: var(--accent-2);
+      color: #fff;
+    }
+
+    /* ---------- Paper sheet ---------- */
+    .sheet {
+      width: 210mm;
+      max-width: 100%;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 15mm 16mm;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .sheet::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--gradient);
+      border-radius: 4px 4px 0 0;
+    }
+
+    /* ---------- Header ---------- */
+    .r-header {
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--rule);
+      margin-bottom: 14px;
+    }
+
+    .r-name {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--ink);
+    }
+
+    .r-role {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      margin-top: 3px;
+      color: var(--accent);
+    }
+
+    .r-contact {
+      margin-top: 9px;
+      font-size: 11px;
+      color: var(--ink-soft);
+      line-height: 1.5;
+    }
+
+    .r-contact a {
+      color: var(--ink-soft);
+      text-decoration: none;
+    }
+
+    .r-contact .sep {
+      color: var(--rule);
+      margin: 0 7px;
+    }
+
+    /* ---------- Sections ---------- */
+    .r-section {
+      margin-bottom: 12px;
+    }
+
+    .r-section-title {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+
+    .r-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .r-summary {
+      font-size: 11.5px;
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    .r-summary b,
+    .r-skill-line b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Experience entries */
+    .r-entry {
+      margin-bottom: 10px;
+    }
+
+    .r-entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .r-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .r-entry-title {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .r-entry-org {
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .r-entry-sub {
+      font-size: 10.5px;
+      color: var(--ink-muted);
+      font-style: italic;
+    }
+
+    .r-entry-date {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+
+    .r-bullets {
+      list-style: none;
+      margin-top: 5px;
+    }
+
+    .r-bullets li {
+      position: relative;
+      padding-left: 14px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      margin-bottom: 3px;
+    }
+
+    .r-bullets li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .r-bullets strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .r-skill-line {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+    }
+
+    .r-skill-line:last-child {
+      margin-bottom: 0;
+    }
+
+    .r-oneline {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .r-oneline b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .r-link {
+      color: var(--accent-2);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* ---------- Print ---------- */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+      }
+
+      .toolbar {
+        display: none !important;
+      }
+
+      .sheet {
+        width: 100%;
+        min-height: auto;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 12mm 14mm;
+      }
+
+      .r-role,
+      .r-section-title,
+      .r-bullets li::before,
+      .sheet::before {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding-top: 88px;
+      }
+
+      .sheet {
+        padding: 22px 18px;
+      }
+
+      .tb-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Toolbar (hidden on print) -->
+  <div class="toolbar">
+    <button class="tb-btn primary" onclick="window.print()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9" />
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+        <rect x="6" y="14" width="12" height="8" />
+      </svg>
+      Print / Save as PDF
+    </button>
+    <a class="tb-btn ghost" href="index.html">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+      Back to site
+    </a>
+  </div>
+
+  <!-- Resume sheet (single-column, ATS-friendly) -->
+  <main class="sheet">
+
+    <!-- Header -->
+    <header class="r-header">
+      <h1 class="r-name">Chinmay Raibagkar</h1>
+      <p class="r-role">Marketing Analyst — Data &amp; Automation</p>
+      <p class="r-contact">
+        Bengaluru, Karnataka
+        <span class="sep">|</span>
+        <a href="tel:+917249148738">+91 72491 48738</a>
+        <span class="sep">|</span>
+        <a href="mailto:contact.chinmay.raibagkar@gmail.com">contact.chinmay.raibagkar@gmail.com</a>
+        <br />
+        <a href="https://www.linkedin.com/in/chinmay-raibagkar-jain-99238222a/">linkedin.com/in/chinmay-raibagkar</a>
+        <span class="sep">|</span>
+        <a href="https://github.com/chinmayraibagkar/">github.com/chinmayraibagkar</a>
+      </p>
+    </header>
+
+    <!-- Professional Summary -->
+    <section class="r-section">
+      <h2 class="r-section-title">Professional Summary</h2>
+      <p class="r-summary">
+        <b>Marketing Analyst</b> specializing in <b>data analytics, automation, and performance marketing</b>. Skilled
+        in <b>SQL, Python, BigQuery, Google Cloud Platform (GCP), Colab Enterprise, MySQL, and Looker Studio</b>, with a
+        track record of building automated <b>ETL data pipelines</b> and dashboards — and engineering <b>agentic AI
+          skills</b> for in-product AI agents — that turn cross-platform marketing data into decisions and reduce
+        customer acquisition cost (CAC) and reporting time.
+      </p>
+    </section>
+
+    <!-- Core Skills -->
+    <section class="r-section">
+      <h2 class="r-section-title">Core Skills</h2>
+      <p class="r-skill-line"><b>Data &amp; Analytics:</b> SQL, MySQL, Python (Pandas, NumPy), BigQuery, Google Cloud
+        Platform (GCP), Colab Enterprise, Looker Studio (Google Data Studio), Plotly, Streamlit, Apps Script, ETL, Data
+        Pipelines, Data Visualization, Dashboarding, Reporting Automation.</p>
+      <p class="r-skill-line"><b>AI &amp; Automation:</b> Agentic AI, AI Agents, Agentic Skill Engineering, LLM / Prompt
+        Engineering, Custom GPT Training, Workflow Automation, Root Cause Analysis (RCA).</p>
+      <p class="r-skill-line"><b>Marketing:</b> Performance Marketing, Meta Ads, Google Ads, Search, Performance Max
+        (Pmax), UAC, Demand Gen, AAA / Advantage+, CAC &amp; ROAS Optimization, Market Research.</p>
+    </section>
+
+    <!-- Professional Experience -->
+    <section class="r-section">
+      <h2 class="r-section-title">Professional Experience</h2>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-entry-title">Marketing Analyst</span>
+            <span class="r-entry-org"> · Maino AI</span>
+          </div>
+          <span class="r-entry-date">Apr 2026 – Present</span>
+        </div>
+        <p class="r-entry-sub">Bengaluru, Karnataka · Performance-marketing intelligence platform</p>
+        <ul class="r-bullets">
+          <li>Own <strong>data analytics and automation</strong> on Google Cloud Platform (<strong>BigQuery, Colab
+              Enterprise</strong>) and <strong>MySQL</strong> — building ETL data pipelines that unify cross-platform
+            marketing data into a single source of truth.</li>
+          <li>Automate reporting and build <strong>Looker Studio</strong> dashboards giving clients real-time visibility
+            into spend, ROAS, CAC, and conversions.</li>
+          <li>Engineer <strong>agentic AI capabilities</strong> for the product's in-product AI agent — authoring agentic
+            skills that improved accuracy across performance-marketing tasks such as <strong>Root Cause Analysis
+              (RCA)</strong> and creative / elemental analysis of video &amp; static ads.</li>
+          <li>Support performance-marketing engagements for clients including <strong>Amazon MX Player, Hyugalife,
+              Nutrabay, MillD, and Hi-Robin</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-entry-title">Analyst — Automation &amp; Technology</span>
+            <span class="r-entry-org"> · Aristok Technologies</span>
+          </div>
+          <span class="r-entry-date">Jun 2024 – Mar 2026</span>
+        </div>
+        <p class="r-entry-sub">Pune, India · Promoted from Business Analyst, Digital Marketing</p>
+        <ul class="r-bullets">
+          <li>Managed Meta &amp; Google Ads campaigns (Search, Performance Max, UAC, Demand Gen, AAA) for
+            <strong>Porter</strong> — reducing <strong>customer acquisition cost (CAC) from ₹750 to ~₹400</strong>.</li>
+          <li>Architected a <strong>BigQuery + Apps Script data pipeline</strong>, removing the spreadsheet 10M-cell
+            limit and saving <strong>10–15 hours/week per person</strong>.</li>
+          <li>Built custom dashboards and reporting with <strong>Python, Streamlit, Plotly, and Looker Studio</strong>;
+            trained custom GPTs to automate campaign insights.</li>
+          <li>Awards: <strong>Spotlight of the Month (Aug 2024)</strong> and <strong>Best Turnaround Story (Q4
+              2024)</strong>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="r-section">
+      <h2 class="r-section-title">Education</h2>
+      <div class="r-entry-head">
+        <div>
+          <span class="r-entry-title">B.Tech, Electronics &amp; Telecommunication Engineering</span>
+          <span class="r-entry-org"> · CGPA 8.84</span>
+        </div>
+        <span class="r-entry-date">2021 – 2025</span>
+      </div>
+      <p class="r-entry-sub">Vishwakarma Institute of Technology, Pune</p>
+    </section>
+
+    <!-- Leadership -->
+    <section class="r-section">
+      <h2 class="r-section-title">Leadership</h2>
+      <div class="r-entry-head">
+        <span class="r-entry-title">President, The Investment Forum</span>
+        <span class="r-entry-date">Jan 2023 – May 2024</span>
+      </div>
+      <p class="r-oneline">Re-established and led a ~60-member community researching stocks, mutual funds, real estate
+        &amp; crypto; organised Fundamental &amp; Technical Analysis workshops.</p>
+    </section>
+
+    <!-- Certifications -->
+    <section class="r-section">
+      <h2 class="r-section-title">Certifications</h2>
+      <ul class="r-bullets">
+        <li><strong>Google Digital Marketing &amp; E-commerce</strong> — Google via Coursera.</li>
+        <li><strong>AI-Powered Modern Marketing Specialization</strong> — Coursera.</li>
+        <li><strong>Introduction to Digital Marketing Fundamentals</strong> — Simplilearn.</li>
+      </ul>
+    </section>
+
+  </main>
+
+</body>
+
+</html>

@@ -11,12 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggle = document.getElementById('themeToggle');
   const html = document.documentElement;
 
+  // A linked-from site (e.g. DataLens) can pass ?theme=light|dark so this page
+  // opens matching the theme the visitor was already using there.
+  const linkedTheme = new URLSearchParams(window.location.search).get('theme');
+
   // Check saved preference or system preference
-  const savedTheme = localStorage.getItem('theme');
+  const savedTheme = linkedTheme === 'light' || linkedTheme === 'dark' ? linkedTheme : localStorage.getItem('theme');
   if (savedTheme === 'light') {
     html.classList.add('light-theme');
   } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches) {
     html.classList.add('light-theme');
+  }
+  if (linkedTheme === 'light' || linkedTheme === 'dark') {
+    localStorage.setItem('theme', linkedTheme);
   }
 
   themeToggle.addEventListener('click', () => {

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semantic layers vs. prompting: where business definitions should live — Chinmay Raibagkar</title>
+  <meta name="description" content="A metric definition in a prompt is a suggestion the model usually follows. In a semantic layer it is fixed SQL. Where each belongs, a simple test for deciding, and a one-week way to start." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="Semantic layers vs. prompting: where business definitions should live — Chinmay Raibagkar" />
+  <meta property="og:description" content="A metric definition in a prompt is a suggestion the model usually follows. In a semantic layer it is fixed SQL. Where each belongs, a simple test for deciding, and a one-week way to start." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">AI analytics</span>
+        <h1 class="post-title">Semantic layers vs. prompting: where business definitions should live <span class="post-hand">(definitions, not suggestions)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 7 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>A definition in a prompt is probabilistic</strong> — it drifts with phrasing, weakens in long contexts, can't be reviewed, and other tools never see it.</li><li><strong>A definition in a semantic layer is fixed SQL</strong> — identical every time, version-controlled, shared by every tool.</li><li><strong>The model picks the metric; the layer defines it.</strong> Start with a few views and column descriptions — about a week of work.</li></ul>
+        <p class="bottom">the prompt shapes judgement, the layer fixes values</p>
+      </section>
+      <div class="prose">
+<p><em>"A repeat customer is anyone with two or more paid orders in the last 12 months."</em></p>
+
+<p>You can write that sentence into an AI tool's system prompt, or you can encode it in a semantic layer. Both will get the AI to produce the right SQL most of the time. Only one of them is actually a definition. The other is a suggestion the model usually follows.</p>
+
+<p>You won't see the difference in week one. You'll see it a few months in, when someone asks the question a new way, gets "the last 365 days" instead of "the last 12 calendar months" — or worse, "this calendar year" — and three people bring three repeat-customer numbers to one meeting.</p>
+
+<h2>What "it's in the prompt" really means</h2>
+
+<p>A system prompt is text the model reads before it writes SQL. It works, most of the time. And it fails in four specific ways that share one cause: <strong>nothing obliges the model to follow it.</strong></p>
+
+<ol class="steps">
+  <li><strong>It drifts with phrasing.</strong>"How many repeat customers?", "Who bought again this year?" and "Show returning buyers" can produce three different queries — the definition was in context each time, but each wording nudged the generation differently.</li>
+  <li><strong>It weakens as the prompt grows.</strong>A definition on line 40 of a 200-line prompt competes with every other instruction, metric and table description. Adherence fades quietly — the query still runs and still looks plausible.</li>
+  <li><strong>It can't be reviewed.</strong>Editing a prompt is editing prose. Nothing tests it, and nobody can tell from the change whether the SQL it produces moved. Change a SQL expression in version control and the diff <em>is</em> the change.</li>
+  <li><strong>It doesn't travel.</strong>Dashboards, scheduled reports and analysts' hand-written queries never read the AI's prompt, so the metric means one thing in chat and another everywhere else.</li>
+</ol>
+
+<aside class="callout warn">
+  <p><strong>The failure is silent — that's what makes it expensive.</strong> A model that ignores a prompt definition doesn't error. It returns valid SQL and a believable number computed slightly differently, and nobody notices until two numbers meet.</p>
+</aside>
+
+<h2>What a semantic layer actually is</h2>
+
+<p>Without the vendor gloss: <strong>a version-controlled file that maps a business term to one exact SQL expression, plus something that expands references to it.</strong></p>
+
+<div class="code"><div class="code-title">metrics/repeat_customers.sql — one metric, one file</div><pre><code><span class="cm">-- name:        repeat_customers</span>
+<span class="cm">-- grain:       customer</span>
+<span class="cm">-- definition:  customers with 2+ paid, non-refunded orders in the</span>
+<span class="cm">--              12 calendar months before the reference month</span>
+<span class="cm">-- owner:       retention team</span>
+<span class="cm">-- changelog:   2026-09-12 — stopped counting fully refunded orders</span>
+<span class="kw">SELECT</span> <span class="kw">COUNT</span>(*) <span class="kw">AS</span> repeat_customers
+<span class="kw">FROM</span> (
+  <span class="kw">SELECT</span> customer_id
+  <span class="kw">FROM</span> orders
+  <span class="kw">WHERE</span> payment_status <span class="kw">IN</span> (&#x27;paid&#x27;, &#x27;partially_refunded&#x27;)
+    <span class="kw">AND</span> refund_amount &lt; order_total
+    <span class="kw">AND</span> <span class="kw">DATE</span>(created_at, &#x27;Asia/Kolkata&#x27;)
+        <span class="kw">BETWEEN</span> <span class="kw">DATE_SUB</span>(@month_start, <span class="kw">INTERVAL</span> 12 <span class="kw">MONTH</span>)
+            <span class="kw">AND</span> <span class="kw">DATE_SUB</span>(@month_start, <span class="kw">INTERVAL</span> 1 <span class="kw">DAY</span>)
+  <span class="kw">GROUP</span> <span class="kw">BY</span> customer_id
+  <span class="kw">HAVING</span> <span class="kw">COUNT</span>(*) &gt;= 2
+);</code></pre></div>
+
+<p>That header gives you three things a prompt line never can: a <strong>grain</strong>, an <strong>owner</strong> and a <strong>changelog</strong>. When someone asks in six months why the number moved, the answer is in the file.</p>
+
+<p>The important part is where the line between the model and the layer sits:</p>
+
+<ol class="steps">
+  <li><strong>The model reads the intent.</strong>"Repeat customers in Pune last quarter?" becomes: metric = repeat_customers, filters = city and period. Genuinely hard, and models are good at it.</li>
+  <li><strong>The layer supplies the metric.</strong>repeat_customers expands to its exact SQL. The model doesn't write it and can't vary it.</li>
+  <li><strong>The model adds filters and grouping.</strong>A <code>WHERE</code> on city and a <code>GROUP BY</code> on month around a fixed expression — mechanical and easy to check.</li>
+  <li><strong>The query is validated before it runs.</strong>A dry run catches invalid columns and reports the cost, for free.</li>
+</ol>
+
+<p><strong>The model selects; the layer defines.</strong> That sentence is the whole design.</p>
+
+<h2>Which definitions belong where?</h2>
+
+<p>Not everything needs a layer entry — 300 unmaintained entries are worse than 12 correct ones. The test I use: <strong>what happens if this is 5% wrong?</strong></p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Definition</th><th>Where it lives</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Revenue, CAC, contribution margin, repeat customer</td><td><strong>Semantic layer</strong></td><td>Ends up in budget decisions and board decks</td></tr>
+    <tr><td>New vs. returning customer</td><td><strong>Semantic layer</strong></td><td>A judgement call with a big effect on the number</td></tr>
+    <tr><td>Date formats, tone, output style</td><td>Prompt</td><td>Being wrong is cosmetic</td></tr>
+    <tr><td>Which table to use for campaign questions</td><td>Prompt</td><td>Mistakes show up as obviously wrong results, not subtly wrong ones</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Most businesses have somewhere between 10 and 30 definitions that fail the 5% test. That's a week of work, not a quarter.</p>
+
+<h2>How to start without buying anything</h2>
+
+<p>The cheapest version captures most of the value: a schema of views that every consumer reads.</p>
+
+<div class="code"><div class="code-title">A semantic layer that is just a view</div><pre><code><span class="cm">-- The AI tool, dashboards, analysts and scheduled reports all read this.</span>
+<span class="cm">-- One definition, changed only through code review.</span>
+<span class="kw">CREATE</span> <span class="kw">OR</span> <span class="kw">REPLACE</span> <span class="kw">VIEW</span> semantic.monthly_customers <span class="kw">AS</span>
+<span class="kw">SELECT</span>
+  <span class="kw">DATE_TRUNC</span>(<span class="kw">DATE</span>(o.created_at, &#x27;Asia/Kolkata&#x27;), <span class="kw">MONTH</span>)           <span class="kw">AS</span> month,
+  o.sales_channel,
+  o.state,
+  <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> o.customer_id)                                   <span class="kw">AS</span> customers,
+  <span class="kw">COUNT</span>(<span class="kw">DISTINCT</span> <span class="kw">IF</span>(o.is_first_order, o.customer_id, <span class="kw">NULL</span>))       <span class="kw">AS</span> new_customers,
+  <span class="kw">SUM</span>(o.net_revenue)                                              <span class="kw">AS</span> net_revenue
+<span class="kw">FROM</span> semantic.orders_clean o
+<span class="kw">WHERE</span> o.payment_status <span class="kw">IN</span> (&#x27;paid&#x27;, &#x27;partially_refunded&#x27;)
+<span class="kw">GROUP</span> <span class="kw">BY</span> month, o.sales_channel, o.state;</code></pre></div>
+
+<p>Point the AI at <code>semantic.*</code> instead of raw tables and a whole class of ambiguity disappears — the confusing columns simply aren't reachable.</p>
+
+<p>Then add column descriptions in the warehouse itself, where every tool that reads the schema picks them up:</p>
+
+<div class="code"><div class="code-title">One line that beats a paragraph of prompt</div><pre><code><span class="kw">ALTER</span> <span class="kw">TABLE</span> analytics.orders
+<span class="kw">ALTER</span> <span class="kw">COLUMN</span> order_total
+<span class="kw">SET</span> <span class="kw">OPTIONS</span> (description =
+  &#x27;Includes tax and shipping. <span class="kw">NOT</span> revenue — use net_revenue for reporting.&#x27;);</code></pre></div>
+
+<p>Move to a dedicated semantic-layer framework when you have more than a couple of dozen metrics, metrics built on other metrics, or several teams changing them. Until then, views plus descriptions are the right size.</p>
+
+<ul class="checklist">
+  <li><strong>Point the AI at curated views</strong>, not raw tables.</li>
+  <li><strong>Describe your trap columns</strong> on the 20 most-queried tables — lead with which column <em>not</em> to use.</li>
+  <li><strong>Record synonyms once</strong> ("sales" means <code>net_revenue</code>) where every tool can read it.</li>
+  <li><strong>Adopt a framework later</strong>, when dependencies between metrics become the problem.</li>
+</ul>
+
+<h2>What the prompt is still for</h2>
+
+<p>Prompts aren't obsolete. They handle everything that's about <em>behaviour</em> rather than <em>values</em>:</p>
+<ul>
+  <li><strong>Disambiguation</strong> — "when someone says 'sales', use net revenue and say so".</li>
+  <li><strong>Table guidance</strong> — "campaign questions use <code>semantic.campaign_daily</code>".</li>
+  <li><strong>Guardrails</strong> — "always filter by date; never scan the raw events table".</li>
+  <li><strong>Uncertainty</strong> — "if two metrics could fit, ask instead of picking".</li>
+</ul>
+<p>Policies about how to act go in the prompt. Facts that must be exactly right go in the layer.</p>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">"Repeat customers?" asked three ways returns three different numbers. What broke?</p>
+  <details><summary>The warehouse data went stale overnight</summary><p><span class="wrong">No.</span> Stale data would shift every phrasing equally.</p></details>
+  <details><summary>A prompt definition drifted with phrasing — it belongs in the layer</summary><p><span class="right">Exactly.</span> Each wording conditions the generation differently. A fixed SQL expression can't drift.</p></details>
+  <details><summary>The model needs fine-tuning on your metrics</summary><p><span class="wrong">No.</span> A fine-tune goes stale with the next schema change; a versioned definition doesn't.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A prompt definition is a suggestion: it drifts, fades and can't be reviewed.</li>
+    <li>A layer definition is fixed SQL, versioned and shared by every tool.</li>
+    <li>The model selects the metric; the layer defines it.</li>
+    <li>Start with curated views and column descriptions — a week of work, most of the benefit.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../preventing-llm-invented-columns/">
+        <span class="tag">AI analytics</span>
+        <h3>How to keep an LLM from inventing a column name</h3>
+        <span class="hand">(four layers, zero model upgrades)</span>
+        <p>LLMs invent column names because they can&#x27;t see your schema. Four engineering layers — retrieval, constraint, dry-run validation and repair — fix it without a bigger model, plus the one failure they can&#x27;t catch.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="../ad-creative-ab-test-significance/">
+        <span class="tag">Ad testing</span>
+        <h3>Your winning ad might be a coin flip</h3>
+        <span class="hand">(check before you scale)</span>
+        <p>Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="../pmax-channel-performance-report/">
+        <span class="tag">Google Ads</span>
+        <h3>Where your PMax money actually goes</h3>
+        <span class="hand">(read the channel report)</span>
+        <p>Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>

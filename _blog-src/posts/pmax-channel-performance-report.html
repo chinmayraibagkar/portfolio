@@ -1,0 +1,156 @@
+<!--meta
+{
+  "title": "Where your PMax money actually goes",
+  "hand": "(read the channel report)",
+  "tag": "Google Ads",
+  "description": "Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS.",
+  "minutes": 7,
+  "date": "2026-10-04",
+  "order": 2,
+  "tldr": [
+    "<strong>A healthy blended PMax ROAS can hide one strong channel</strong> carrying several that sit below breakeven.",
+    "<strong>Compare share of spend with share of conversion value,</strong> then remove view-through credit before judging YouTube and Display.",
+    "<strong>Fix assets and read the diagnostics first,</strong> then holdout-test weak channels before you starve them."
+  ],
+  "bottom": "one average, four different stories"
+}
+-->
+<p>The Performance Max campaign shows <strong>3.5x ROAS</strong> on ₹8,00,000 a month. For a long time, that single blended number was all anyone got — Google chose where the money went and reported one result.</p>
+
+<p>Open the channel performance report, though, and the picture splits. Search and Shopping turn ₹3,60,000 into ₹21,84,000 — about <strong>6.1x</strong>. YouTube turns ₹2,00,000 into ₹1,68,000 — <strong>0.84x</strong>. Display and Discover sit somewhere in between, and both below breakeven.</p>
+
+<p><strong>A 3.5x campaign can be a 6x engine towing three passengers.</strong> You still can't set budgets per channel inside PMax, but you can now see who's pulling their weight — and you have more levers than most accounts use.</p>
+
+<div class="case">
+  <div class="case-title">One PMax campaign, opened up <span class="case-badge">Channel audit</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Campaign total</span><span class="v">₹8,00,000 → ₹28,00,000</span><span class="s">3.5x — the number on the summary card</span></div>
+    <div class="case-cell"><span class="k">Search &amp; Shopping</span><span class="v">6.07x</span><span class="s">45% of spend, 78% of value</span></div>
+    <div class="case-cell"><span class="k">Discover &amp; Gmail</span><span class="v">2.10x</span><span class="s">10% of spend, 6% of value</span></div>
+    <div class="case-cell"><span class="k">Display</span><span class="v">1.75x</span><span class="s">20% of spend, 10% of value</span></div>
+    <div class="case-cell"><span class="k">YouTube</span><span class="v">0.84x</span><span class="s">25% of spend, 6% of value</span></div>
+    <div class="case-cell"><span class="k">Spend below 2.5x breakeven</span><span class="v">₹4,40,000 / month</span><span class="s">55% of the budget, at a 40% margin</span></div>
+  </div>
+  <p class="case-foot">This doesn't prove the weaker channels are useless — some of them help Search convert later. It does prove the 3.5x average hides where the profit comes from, and that more than half the budget needs a reason to stay.</p>
+</div>
+
+<h2>One campaign, many storefronts</h2>
+
+<p>Performance Max buys inventory across Google's surfaces from a single budget. The channel performance report — under <em>Insights &amp; reports → Channel performance</em> — breaks results out by Search, YouTube, Display, Discover, Gmail, Maps and Search partners. Through 2026 Google kept adding to it: downloads, splits by conversion action and ad event type, and diagnostics for issues like missing assets or bid targets limiting delivery.</p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Channel</th><th class="num">Spend</th><th class="num">Share of spend</th><th class="num">Conversion value</th><th class="num">Share of value</th><th class="num">ROAS</th></tr></thead>
+  <tbody>
+    <tr class="hot"><td>Search &amp; Shopping</td><td class="num">₹3,60,000</td><td class="num">45%</td><td class="num">₹21,84,000</td><td class="num">78%</td><td class="num">6.07x</td></tr>
+    <tr><td>YouTube</td><td class="num">₹2,00,000</td><td class="num">25%</td><td class="num">₹1,68,000</td><td class="num">6%</td><td class="num">0.84x</td></tr>
+    <tr><td>Display</td><td class="num">₹1,60,000</td><td class="num">20%</td><td class="num">₹2,80,000</td><td class="num">10%</td><td class="num">1.75x</td></tr>
+    <tr><td>Discover &amp; Gmail</td><td class="num">₹80,000</td><td class="num">10%</td><td class="num">₹1,68,000</td><td class="num">6%</td><td class="num">2.10x</td></tr>
+    <tr><td><strong>Total</strong></td><td class="num"><strong>₹8,00,000</strong></td><td class="num">100%</td><td class="num"><strong>₹28,00,000</strong></td><td class="num">100%</td><td class="num"><strong>3.50x</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Spend share vs. value share</h2>
+
+<p>The fastest read of the report is two columns side by side: <strong>share of spend</strong> and <strong>share of conversion value</strong>. A channel taking a quarter of the money and returning 6% of the value needs a good explanation.</p>
+
+<p>Two explanations are legitimate. Upper-funnel channels can create demand that converts later through Search — real, but something to test, not assume. And their conversions may be counted differently.</p>
+
+<aside class="callout warn">
+  <p><strong>Check the ad event type before trusting YouTube and Display.</strong> Segment the report by ad event type. A big share of conversions on these channels is often view-through or engaged-view — someone saw or watched the ad, didn't click, and bought later. Some of those people would have bought anyway.</p>
+</aside>
+
+<h2>Is each channel paying its way?</h2>
+
+<p>Judge each channel against your breakeven ROAS (1 ÷ gross margin), then again with view credit removed. A channel that fails both is spending your money to collect credit.</p>
+
+<div class="widget" data-widget="channel-check">
+  <p class="widget-title">Is this channel paying its way?</p>
+  <label>Channel spend (month): <strong data-show="spend"></strong>
+    <input type="range" name="spend" min="10000" max="500000" step="10000" value="200000"></label>
+  <label>Channel conversion value: <strong data-show="value"></strong>
+    <input type="range" name="value" min="0" max="2000000" step="10000" value="168000"></label>
+  <label>Gross margin: <strong data-show="margin"></strong>
+    <input type="range" name="margin" min="0.15" max="0.8" step="0.05" value="0.4"></label>
+  <label>Share of value from views (not clicks): <strong data-show="view"></strong>
+    <input type="range" name="view" min="0" max="0.9" step="0.05" value="0.7"></label>
+  <div class="out"></div>
+  <p class="verdict"></p>
+</div>
+
+<h2>The channel scorecard in SQL</h2>
+
+<p>Download the channel report — or load it through a connector — into a daily table, and one query gives you every channel's shares, ROAS and click-only ROAS:</p>
+
+```sql title="PMax channel scorecard, last 30 days"
+WITH by_channel AS (
+  SELECT
+    channel,
+    SUM(cost)                                              AS spend,
+    SUM(conv_value)                                        AS value,
+    SUM(IF(ad_event_type = 'CLICK', conv_value, 0))        AS click_value
+  FROM pmax_channel_daily
+  WHERE campaign = 'PMax | Catalogue'
+    AND day >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+  GROUP BY channel
+)
+SELECT
+  channel,
+  ROUND(spend)                                  AS spend,
+  ROUND(spend / SUM(spend) OVER () * 100, 1)    AS spend_share_pct,
+  ROUND(value / SUM(value) OVER () * 100, 1)    AS value_share_pct,
+  ROUND(value / NULLIF(spend, 0), 2)            AS roas,
+  ROUND(click_value / NULLIF(spend, 0), 2)      AS click_only_roas,
+  value / NULLIF(spend, 0) >= 2.5               AS above_breakeven   -- 1 ÷ your margin
+FROM by_channel
+ORDER BY spend DESC;
+```
+
+<p>Run it monthly. The mix shifts as PMax learns, as assets change and around sale periods — a channel that paid its way in March may not in October.</p>
+
+<h2>The levers you actually have</h2>
+
+<p>You can't type a budget next to "YouTube". You can change what PMax has to work with, and that moves where it spends.</p>
+
+<ul>
+  <li><strong>Assets.</strong> No video? PMax may assemble its own from your images. Weak video means weak YouTube results; strong video can turn the channel around. Read the channel diagnostics first.</li>
+  <li><strong>Signals and exclusions.</strong> Audience signals steer PMax toward better people; brand exclusions, negative keywords and URL exclusions stop spend on searches and pages you don't want.</li>
+  <li><strong>Structure.</strong> Run standard Search or Shopping alongside PMax for your best terms and products, leaving PMax less room to lean on easy conversions.</li>
+</ul>
+
+<h2>A monthly 20-minute review</h2>
+
+<ol class="steps">
+  <li><strong>Pull the channel report</strong>Spend, conversion value and ad event type by channel for the last 30 days. Let the latest week's conversions mature first.</li>
+  <li><strong>Compare spend share with value share</strong>Flag any channel taking more of the budget than it returns in value.</li>
+  <li><strong>Strip view credit and check breakeven</strong>Recompute flagged channels on click-only value. Below breakeven on both? It needs proof to keep its share.</li>
+  <li><strong>Fix inputs before cutting</strong>Missing or disapproved assets, or bid targets limiting delivery — fix those first.</li>
+  <li><strong>Test what's left</strong>A geo or time holdout tells you whether Search actually falls without the weak channel.</li>
+</ol>
+
+<ul class="checklist">
+  <li><strong>Never report PMax as one number again</strong> — put channel ROAS and value share next to the campaign total.</li>
+  <li><strong>Segment by ad event type</strong> — show click and view conversions separately for YouTube and Display.</li>
+  <li><strong>Keep your brand out of the picture</strong> — brand exclusions stop a strong Search number from just being people searching your name.</li>
+</ul>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">YouTube takes 25% of PMax spend and returns 6% of conversion value, and 70% of that value is from engaged views. What do you do first?</p>
+  <details><summary>Nothing — the campaign total is above target</summary><p><span class="wrong">No.</span> The average hides a channel spending a quarter of the budget for very little.</p></details>
+  <details><summary>Check the asset diagnostics, then holdout-test YouTube</summary><p><span class="right">Exactly.</span> Weak or auto-generated video often explains it, and a holdout tells you whether those view conversions are real.</p></details>
+  <details><summary>Kill the campaign and move everything to Search</summary><p><span class="wrong">Too drastic.</span> Search may be getting help from YouTube — fix inputs and test before cutting.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A 3.5x PMax campaign can be a 6x Search engine carrying three channels below breakeven.</li>
+    <li>Compare each channel's share of spend with its share of value.</li>
+    <li>Segment YouTube and Display by ad event type — view credit isn't clicks.</li>
+    <li>Fix assets and limiting bid targets before starving a channel.</li>
+    <li>Holdout-test weak channels; keep them only if Search drops without them.</li>
+  </ul>
+</div>

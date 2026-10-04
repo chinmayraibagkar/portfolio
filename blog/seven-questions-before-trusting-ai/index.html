@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seven questions to ask before you trust an AI&#x27;s answer about your data — Chinmay Raibagkar</title>
+  <meta name="description" content="An AI-written query can run cleanly and still answer a different question. Seven quick checks — from the table it chose to timezones and refunds — that catch silent failures before a number reaches leadership." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="Seven questions to ask before you trust an AI&#x27;s answer about your data — Chinmay Raibagkar" />
+  <meta property="og:description" content="An AI-written query can run cleanly and still answer a different question. Seven quick checks — from the table it chose to timezones and refunds — that catch silent failures before a number reaches leadership." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">AI analytics</span>
+        <h1 class="post-title">Seven questions to ask before you trust an AI&#x27;s answer about your data <span class="post-hand">(before you paste it into the deck)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 7 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>The dangerous failure is silent:</strong> valid SQL, zero errors, a plausible number — answering a slightly different question.</li><li><strong>Check the source, the filters, the joins and the grain</strong> before you look at the result.</li><li><strong>Say the query out loud in plain English</strong> and let someone who knows the business object.</li></ul>
+        <p class="bottom">a number without its query is a rumour with formatting</p>
+      </section>
+      <div class="prose">
+<p>An AI can write a query that runs in under a second, throws no errors, returns a neatly formatted number — and still be answering a different question from the one you asked.</p>
+
+<p>That's the failure worth worrying about. When code breaks, it breaks loudly: red text, nothing returned. When a query is <strong>semantically</strong> wrong, nothing tells you. You get a confident number and a clean chart.</p>
+
+<div class="case">
+  <div class="case-title">The answer that looked fine <span class="case-badge">Silent failure</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Question</span><span class="v">"How much did repeat customers spend in September?"</span></div>
+    <div class="case-cell"><span class="k">AI's answer</span><span class="v">₹9,64,000</span><span class="s">Ran in 0.3s, no errors</span></div>
+    <div class="case-cell"><span class="k">Finance's number</span><span class="v">₹7,41,500</span><span class="s">From the ledger</span></div>
+    <div class="case-cell"><span class="k">What happened</span><span class="v">+30% phantom revenue</span><span class="s">A join on a non-unique key duplicated rows 1.3×</span></div>
+  </div>
+</div>
+
+<p>Before an AI-generated number goes into a slide for your leadership team, run these seven checks. None of them needs you to write SQL — only to read a little of it.</p>
+
+<h2>1. Can you see the query at all?</h2>
+
+<p>The first check is yes or no: did the tool show you the exact SQL it ran, or just a number? If you can't see the query, you can't check whether the logic matches how your company defines the metric. A tool that shows the SQL behind every number lets anyone audit it in seconds. One that doesn't is asking for faith.</p>
+
+<h2>2. Which table did it read from?</h2>
+
+<p>"Revenue" rarely lives in only one place. You might have:</p>
+<ul>
+  <li><code>orders</code> — order totals including tax and shipping,</li>
+  <li><code>order_items</code> — item prices before and after discounts,</li>
+  <li><code>payouts</code> — what actually settled after payment-gateway fees.</li>
+</ul>
+
+<div class="code"><div class="code-title">Same word, different numbers</div><pre><code><span class="cm">-- What the AI wrote: includes tax and shipping</span>
+<span class="kw">SELECT</span> <span class="kw">SUM</span>(order_total) <span class="kw">FROM</span> orders <span class="kw">WHERE</span> status = &#x27;paid&#x27;;
+
+<span class="cm">-- What finance means by revenue: net item value after discounts</span>
+<span class="kw">SELECT</span> <span class="kw">SUM</span>(item_price - item_discount) <span class="kw">FROM</span> order_items;</code></pre></div>
+
+<p><strong>The check:</strong> look at <code>FROM</code> first. Is that the table your team treats as the source of truth for this metric?</p>
+
+<h2>3. What is <code>WHERE</code> really filtering?</h2>
+
+<p>This is where "ran successfully" and "right number" part ways most often. The classic case is excluding cancellations:</p>
+
+<div class="code"><div class="code-title">The NULL trap</div><pre><code><span class="cm">-- Looks careful. Quietly drops every order whose status is still empty.</span>
+<span class="kw">SELECT</span> <span class="kw">SUM</span>(order_total)
+<span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> status != &#x27;cancelled&#x27;;</code></pre></div>
+
+<p>In SQL, <code>NULL != 'cancelled'</code> isn't true — it's <em>unknown</em> — so brand-new orders with no status yet vanish from the total. Safer: name what to <em>include</em>, e.g. <code>status IN ('paid', 'partially_refunded')</code>.</p>
+
+<p>While you're here, confirm the date column. "Created", "paid" and "shipped" timestamps answer different questions, and "last 30 days" isn't "last month".</p>
+
+<h2>4. Could a join be multiplying rows?</h2>
+
+<p>A join on a key that isn't unique is the most common reason an AI number comes out mysteriously 1.3×, 2× or 5× too high.</p>
+
+<p>Ask for "revenue and ad spend by day" and a model may join orders straight to the spend table on the date. If four campaigns ran on Tuesday, every Tuesday order now appears four times:</p>
+
+<div class="code"><div class="code-title">A fan-out join</div><pre><code><span class="cm">-- Every order is repeated once per campaign that ran that day</span>
+<span class="kw">SELECT</span> o.order_date, <span class="kw">SUM</span>(o.order_total) <span class="kw">AS</span> revenue
+<span class="kw">FROM</span> orders o
+<span class="kw">JOIN</span> campaign_spend s <span class="kw">ON</span> o.order_date = s.spend_date
+<span class="kw">GROUP</span> <span class="kw">BY</span> o.order_date;</code></pre></div>
+
+<p><strong>The check:</strong> for each join, ask "could one row on the left match several rows on the right?" If yes, each side should be summed to one row per day <em>before</em> joining.</p>
+
+<h2>5. Does the grain match the question?</h2>
+
+<p>The <code>GROUP BY</code> decides what each row of the answer represents. "Customers" should be grouped by <code>customer_id</code> — not <code>order_id</code>, which counts a repeat buyer once per order and inflates everything built on top of it, from CAC to repeat rate.</p>
+
+<h2>6. Would someone who knows the business agree?</h2>
+
+<p>Turn the query into one plain sentence:</p>
+<blockquote>"It took every row in the signups table from last week, counted them whether or not the email was verified, and divided by total site visits."</blockquote>
+<p>Read that to your growth lead. If they say <em>"we only count verified work emails"</em>, you just caught the problem before leadership did.</p>
+
+<h2>7. Zeros, timezones and refunds?</h2>
+
+<p>Models assume tidy data. Real data isn't:</p>
+<ul>
+  <li><strong>Zero-spend days</strong> — dividing by spend needs <code>NULLIF</code> or <code>SAFE_DIVIDE</code>, or the query breaks or misleads.</li>
+  <li><strong>Timezones</strong> — if the warehouse stores UTC and the business reports in IST, day boundaries move the busiest evening hours into the wrong day.</li>
+  <li><strong>Refunds</strong> — negative rows in the same table, or positive rows in a separate one? The query needs to know.</li>
+</ul>
+
+<div class="code"><div class="code-title">Handling the messy edges</div><pre><code><span class="kw">SELECT</span>
+  <span class="kw">DATE</span>(created_at, &#x27;Asia/Kolkata&#x27;)                         <span class="kw">AS</span> ist_day,
+  <span class="kw">ROUND</span>(<span class="kw">SUM</span>(net_revenue) / <span class="kw">NULLIF</span>(<span class="kw">SUM</span>(ad_spend), 0), 2)     <span class="kw">AS</span> roas
+<span class="kw">FROM</span> daily_metrics
+<span class="kw">GROUP</span> <span class="kw">BY</span> ist_day;</code></pre></div>
+
+<h2>The pocket version</h2>
+
+<ul class="checklist">
+  <li><strong>See the SQL</strong> — no query, no trust.</li>
+  <li><strong>Check the <code>FROM</code></strong> — is it your source of truth for this metric?</li>
+  <li><strong>Read <code>WHERE</code> in plain words</strong> — right date column, cancellations and refunds handled, NULLs safe.</li>
+  <li><strong>Question every join</strong> — can one row match many?</li>
+  <li><strong>Match <code>GROUP BY</code> to the noun</strong> — customers means customers, not orders.</li>
+  <li><strong>Translate it for an expert</strong> — let them object early.</li>
+  <li><strong>Assume messy data</strong> — zero guards, timezones, refund signs.</li>
+</ul>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">A query runs without errors but sums <code>gross_total</code> instead of <code>net_total</code>. Which check catches it?</p>
+  <details><summary>Checking which table and column it chose</summary><p><span class="right">Exactly.</span> The query is valid — only asking where your definition of revenue lives catches a real-but-wrong column.</p></details>
+  <details><summary>Checking timezones and edge cases</summary><p><span class="wrong">Not this time.</span> The number is wrong at the source, long before timezones matter.</p></details>
+  <details><summary>Re-running it, since errors show up on retry</summary><p><span class="wrong">No.</span> A semantically wrong query returns the same wrong number every time.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A query with zero errors can still answer a different question.</li>
+    <li>Check source table, filters, joins and grain — before the result.</li>
+    <li>Translate the query into one sentence and let a domain expert object.</li>
+    <li>If a tool won't show its SQL, don't put its number in front of anyone.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../semantic-layers-vs-prompting/">
+        <span class="tag">AI analytics</span>
+        <h3>Semantic layers vs. prompting: where business definitions should live</h3>
+        <span class="hand">(definitions, not suggestions)</span>
+        <p>A metric definition in a prompt is a suggestion the model usually follows. In a semantic layer it is fixed SQL. Where each belongs, a simple test for deciding, and a one-week way to start.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="../preventing-llm-invented-columns/">
+        <span class="tag">AI analytics</span>
+        <h3>How to keep an LLM from inventing a column name</h3>
+        <span class="hand">(four layers, zero model upgrades)</span>
+        <p>LLMs invent column names because they can&#x27;t see your schema. Four engineering layers — retrieval, constraint, dry-run validation and repair — fix it without a bigger model, plus the one failure they can&#x27;t catch.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="../ad-creative-ab-test-significance/">
+        <span class="tag">Ad testing</span>
+        <h3>Your winning ad might be a coin flip</h3>
+        <span class="hand">(check before you scale)</span>
+        <p>Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>

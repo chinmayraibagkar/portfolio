@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Where your PMax money actually goes — Chinmay Raibagkar</title>
+  <meta name="description" content="Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="Where your PMax money actually goes — Chinmay Raibagkar" />
+  <meta property="og:description" content="Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">Google Ads</span>
+        <h1 class="post-title">Where your PMax money actually goes <span class="post-hand">(read the channel report)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 7 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>A healthy blended PMax ROAS can hide one strong channel</strong> carrying several that sit below breakeven.</li><li><strong>Compare share of spend with share of conversion value,</strong> then remove view-through credit before judging YouTube and Display.</li><li><strong>Fix assets and read the diagnostics first,</strong> then holdout-test weak channels before you starve them.</li></ul>
+        <p class="bottom">one average, four different stories</p>
+      </section>
+      <div class="prose">
+<p>The Performance Max campaign shows <strong>3.5x ROAS</strong> on ₹8,00,000 a month. For a long time, that single blended number was all anyone got — Google chose where the money went and reported one result.</p>
+
+<p>Open the channel performance report, though, and the picture splits. Search and Shopping turn ₹3,60,000 into ₹21,84,000 — about <strong>6.1x</strong>. YouTube turns ₹2,00,000 into ₹1,68,000 — <strong>0.84x</strong>. Display and Discover sit somewhere in between, and both below breakeven.</p>
+
+<p><strong>A 3.5x campaign can be a 6x engine towing three passengers.</strong> You still can't set budgets per channel inside PMax, but you can now see who's pulling their weight — and you have more levers than most accounts use.</p>
+
+<div class="case">
+  <div class="case-title">One PMax campaign, opened up <span class="case-badge">Channel audit</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Campaign total</span><span class="v">₹8,00,000 → ₹28,00,000</span><span class="s">3.5x — the number on the summary card</span></div>
+    <div class="case-cell"><span class="k">Search &amp; Shopping</span><span class="v">6.07x</span><span class="s">45% of spend, 78% of value</span></div>
+    <div class="case-cell"><span class="k">Discover &amp; Gmail</span><span class="v">2.10x</span><span class="s">10% of spend, 6% of value</span></div>
+    <div class="case-cell"><span class="k">Display</span><span class="v">1.75x</span><span class="s">20% of spend, 10% of value</span></div>
+    <div class="case-cell"><span class="k">YouTube</span><span class="v">0.84x</span><span class="s">25% of spend, 6% of value</span></div>
+    <div class="case-cell"><span class="k">Spend below 2.5x breakeven</span><span class="v">₹4,40,000 / month</span><span class="s">55% of the budget, at a 40% margin</span></div>
+  </div>
+  <p class="case-foot">This doesn't prove the weaker channels are useless — some of them help Search convert later. It does prove the 3.5x average hides where the profit comes from, and that more than half the budget needs a reason to stay.</p>
+</div>
+
+<h2>One campaign, many storefronts</h2>
+
+<p>Performance Max buys inventory across Google's surfaces from a single budget. The channel performance report — under <em>Insights &amp; reports → Channel performance</em> — breaks results out by Search, YouTube, Display, Discover, Gmail, Maps and Search partners. Through 2026 Google kept adding to it: downloads, splits by conversion action and ad event type, and diagnostics for issues like missing assets or bid targets limiting delivery.</p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Channel</th><th class="num">Spend</th><th class="num">Share of spend</th><th class="num">Conversion value</th><th class="num">Share of value</th><th class="num">ROAS</th></tr></thead>
+  <tbody>
+    <tr class="hot"><td>Search &amp; Shopping</td><td class="num">₹3,60,000</td><td class="num">45%</td><td class="num">₹21,84,000</td><td class="num">78%</td><td class="num">6.07x</td></tr>
+    <tr><td>YouTube</td><td class="num">₹2,00,000</td><td class="num">25%</td><td class="num">₹1,68,000</td><td class="num">6%</td><td class="num">0.84x</td></tr>
+    <tr><td>Display</td><td class="num">₹1,60,000</td><td class="num">20%</td><td class="num">₹2,80,000</td><td class="num">10%</td><td class="num">1.75x</td></tr>
+    <tr><td>Discover &amp; Gmail</td><td class="num">₹80,000</td><td class="num">10%</td><td class="num">₹1,68,000</td><td class="num">6%</td><td class="num">2.10x</td></tr>
+    <tr><td><strong>Total</strong></td><td class="num"><strong>₹8,00,000</strong></td><td class="num">100%</td><td class="num"><strong>₹28,00,000</strong></td><td class="num">100%</td><td class="num"><strong>3.50x</strong></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Spend share vs. value share</h2>
+
+<p>The fastest read of the report is two columns side by side: <strong>share of spend</strong> and <strong>share of conversion value</strong>. A channel taking a quarter of the money and returning 6% of the value needs a good explanation.</p>
+
+<p>Two explanations are legitimate. Upper-funnel channels can create demand that converts later through Search — real, but something to test, not assume. And their conversions may be counted differently.</p>
+
+<aside class="callout warn">
+  <p><strong>Check the ad event type before trusting YouTube and Display.</strong> Segment the report by ad event type. A big share of conversions on these channels is often view-through or engaged-view — someone saw or watched the ad, didn't click, and bought later. Some of those people would have bought anyway.</p>
+</aside>
+
+<h2>Is each channel paying its way?</h2>
+
+<p>Judge each channel against your breakeven ROAS (1 ÷ gross margin), then again with view credit removed. A channel that fails both is spending your money to collect credit.</p>
+
+<div class="widget" data-widget="channel-check">
+  <p class="widget-title">Is this channel paying its way?</p>
+  <label>Channel spend (month): <strong data-show="spend"></strong>
+    <input type="range" name="spend" min="10000" max="500000" step="10000" value="200000"></label>
+  <label>Channel conversion value: <strong data-show="value"></strong>
+    <input type="range" name="value" min="0" max="2000000" step="10000" value="168000"></label>
+  <label>Gross margin: <strong data-show="margin"></strong>
+    <input type="range" name="margin" min="0.15" max="0.8" step="0.05" value="0.4"></label>
+  <label>Share of value from views (not clicks): <strong data-show="view"></strong>
+    <input type="range" name="view" min="0" max="0.9" step="0.05" value="0.7"></label>
+  <div class="out"></div>
+  <p class="verdict"></p>
+</div>
+
+<h2>The channel scorecard in SQL</h2>
+
+<p>Download the channel report — or load it through a connector — into a daily table, and one query gives you every channel's shares, ROAS and click-only ROAS:</p>
+
+<div class="code"><div class="code-title">PMax channel scorecard, last 30 days</div><pre><code><span class="kw">WITH</span> by_channel <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    channel,
+    <span class="kw">SUM</span>(cost)                                              <span class="kw">AS</span> spend,
+    <span class="kw">SUM</span>(conv_value)                                        <span class="kw">AS</span> value,
+    <span class="kw">SUM</span>(<span class="kw">IF</span>(ad_event_type = &#x27;CLICK&#x27;, conv_value, 0))        <span class="kw">AS</span> click_value
+  <span class="kw">FROM</span> pmax_channel_daily
+  <span class="kw">WHERE</span> campaign = &#x27;PMax | Catalogue&#x27;
+    <span class="kw">AND</span> day &gt;= <span class="kw">DATE_SUB</span>(<span class="kw">CURRENT_DATE</span>(), <span class="kw">INTERVAL</span> 30 <span class="kw">DAY</span>)
+  <span class="kw">GROUP</span> <span class="kw">BY</span> channel
+)
+<span class="kw">SELECT</span>
+  channel,
+  <span class="kw">ROUND</span>(spend)                                  <span class="kw">AS</span> spend,
+  <span class="kw">ROUND</span>(spend / <span class="kw">SUM</span>(spend) <span class="kw">OVER</span> () * 100, 1)    <span class="kw">AS</span> spend_share_pct,
+  <span class="kw">ROUND</span>(value / <span class="kw">SUM</span>(value) <span class="kw">OVER</span> () * 100, 1)    <span class="kw">AS</span> value_share_pct,
+  <span class="kw">ROUND</span>(value / <span class="kw">NULLIF</span>(spend, 0), 2)            <span class="kw">AS</span> roas,
+  <span class="kw">ROUND</span>(click_value / <span class="kw">NULLIF</span>(spend, 0), 2)      <span class="kw">AS</span> click_only_roas,
+  value / <span class="kw">NULLIF</span>(spend, 0) &gt;= 2.5               <span class="kw">AS</span> above_breakeven   <span class="cm">-- 1 ÷ your margin</span>
+<span class="kw">FROM</span> by_channel
+<span class="kw">ORDER</span> <span class="kw">BY</span> spend <span class="kw">DESC</span>;</code></pre></div>
+
+<p>Run it monthly. The mix shifts as PMax learns, as assets change and around sale periods — a channel that paid its way in March may not in October.</p>
+
+<h2>The levers you actually have</h2>
+
+<p>You can't type a budget next to "YouTube". You can change what PMax has to work with, and that moves where it spends.</p>
+
+<ul>
+  <li><strong>Assets.</strong> No video? PMax may assemble its own from your images. Weak video means weak YouTube results; strong video can turn the channel around. Read the channel diagnostics first.</li>
+  <li><strong>Signals and exclusions.</strong> Audience signals steer PMax toward better people; brand exclusions, negative keywords and URL exclusions stop spend on searches and pages you don't want.</li>
+  <li><strong>Structure.</strong> Run standard Search or Shopping alongside PMax for your best terms and products, leaving PMax less room to lean on easy conversions.</li>
+</ul>
+
+<h2>A monthly 20-minute review</h2>
+
+<ol class="steps">
+  <li><strong>Pull the channel report</strong>Spend, conversion value and ad event type by channel for the last 30 days. Let the latest week's conversions mature first.</li>
+  <li><strong>Compare spend share with value share</strong>Flag any channel taking more of the budget than it returns in value.</li>
+  <li><strong>Strip view credit and check breakeven</strong>Recompute flagged channels on click-only value. Below breakeven on both? It needs proof to keep its share.</li>
+  <li><strong>Fix inputs before cutting</strong>Missing or disapproved assets, or bid targets limiting delivery — fix those first.</li>
+  <li><strong>Test what's left</strong>A geo or time holdout tells you whether Search actually falls without the weak channel.</li>
+</ol>
+
+<ul class="checklist">
+  <li><strong>Never report PMax as one number again</strong> — put channel ROAS and value share next to the campaign total.</li>
+  <li><strong>Segment by ad event type</strong> — show click and view conversions separately for YouTube and Display.</li>
+  <li><strong>Keep your brand out of the picture</strong> — brand exclusions stop a strong Search number from just being people searching your name.</li>
+</ul>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">YouTube takes 25% of PMax spend and returns 6% of conversion value, and 70% of that value is from engaged views. What do you do first?</p>
+  <details><summary>Nothing — the campaign total is above target</summary><p><span class="wrong">No.</span> The average hides a channel spending a quarter of the budget for very little.</p></details>
+  <details><summary>Check the asset diagnostics, then holdout-test YouTube</summary><p><span class="right">Exactly.</span> Weak or auto-generated video often explains it, and a holdout tells you whether those view conversions are real.</p></details>
+  <details><summary>Kill the campaign and move everything to Search</summary><p><span class="wrong">Too drastic.</span> Search may be getting help from YouTube — fix inputs and test before cutting.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A 3.5x PMax campaign can be a 6x Search engine carrying three channels below breakeven.</li>
+    <li>Compare each channel's share of spend with its share of value.</li>
+    <li>Segment YouTube and Display by ad event type — view credit isn't clicks.</li>
+    <li>Fix assets and limiting bid targets before starving a channel.</li>
+    <li>Holdout-test weak channels; keep them only if Search drops without them.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../audit-ai-query-60-seconds/">
+        <span class="tag">SQL · AI</span>
+        <h3>How to audit an AI-generated query in 60 seconds</h3>
+        <span class="hand">(three places to look)</span>
+        <p>A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check.</p>
+        <span class="meta">5 min read</span>
+      </a>
+      <a class="post-card" href="../ai-agent-ad-account-write-access/">
+        <span class="tag">AI · Ad accounts</span>
+        <h3>Your AI agent can now edit your ad account</h3>
+        <span class="hand">(read is a report, write is a risk)</span>
+        <p>AI agents can now pause ads and move budgets. Why a wrong action costs far more than a wrong answer, and the permission setup that keeps an agent useful without letting it run up a bill.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="../what-ai-analyst-cannot-do/">
+        <span class="tag">AI analytics</span>
+        <h3>What an AI analyst can&#x27;t do yet</h3>
+        <span class="hand">(an honest list, from someone who uses them daily)</span>
+        <p>Eight real limits of AI data analysts — why each one exists, which are shrinking, and four tests to run before you trust one with a board-deck number.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>

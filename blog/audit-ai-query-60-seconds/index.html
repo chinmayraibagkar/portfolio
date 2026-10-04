@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to audit an AI-generated query in 60 seconds — Chinmay Raibagkar</title>
+  <meta name="description" content="A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="How to audit an AI-generated query in 60 seconds — Chinmay Raibagkar" />
+  <meta property="og:description" content="A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">SQL · AI</span>
+        <h1 class="post-title">How to audit an AI-generated query in 60 seconds <span class="post-hand">(three places to look)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 5 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>Read inside out:</strong> FROM and JOINs first, WHERE second, GROUP BY third. The SELECT list is cosmetic.</li><li><strong>One join on a date can triple revenue</strong> with zero errors — ask whether one row on the left can match several on the right.</li><li><strong>Say the WHERE clause in plain English</strong>, compare it with your question, then glance at the byte estimate.</li></ul>
+        <p class="bottom">a minute on the joins beats an hour on the chart</p>
+      </section>
+      <div class="prose">
+<p>You don't need to be fluent in SQL to catch a wrong AI answer. You need a minute and three places to look: the tables it used, the filters it applied, and the level it grouped at. Nearly every confidently wrong number fails at least one of those.</p>
+
+<h2>Start with FROM and the JOINs, not SELECT</h2>
+
+<p>Most people read a query top to bottom, starting at <code>SELECT</code>. Read it inside out instead, starting at <code>FROM</code>. The select list only decides which columns are shown and what they're called. <code>FROM</code> and <code>JOIN</code> decide <strong>which rows the answer is computed over</strong> — and a wrong set of rows can't be saved by a nice-looking select list.</p>
+
+<p>Three questions, in order:</p>
+
+<p><strong>Do I recognise these tables?</strong> A query answering "revenue last month" from <code>orders_legacy</code>, when the team moved to <code>orders</code> a year ago, is stale before it runs. A query reaching into raw staging tables instead of your cleaned views is improvising. If a table name surprises you, stop — the surprise is the audit doing its job.</p>
+
+<p><strong>Is the join key unique on at least one side?</strong> This is the most expensive mistake in AI-written SQL. Join orders to campaign spend on the date, and every order is repeated once for every campaign that ran that day:</p>
+
+<div class="code"><div class="code-title">The fan-out join, and the fix</div><pre><code><span class="cm">-- Wrong: each order counted once per campaign that ran that day.</span>
+<span class="cm">-- Three campaigns a day = 3x revenue, zero errors.</span>
+<span class="kw">FROM</span> orders o
+<span class="kw">JOIN</span> campaign_spend s <span class="kw">ON</span> o.order_date = s.spend_date
+
+<span class="cm">-- Right: bring each side to one row per day, THEN join.</span>
+<span class="kw">FROM</span> (<span class="kw">SELECT</span> order_date, <span class="kw">SUM</span>(net_revenue) <span class="kw">AS</span> revenue
+      <span class="kw">FROM</span> orders <span class="kw">GROUP</span> <span class="kw">BY</span> order_date) o
+<span class="kw">JOIN</span> (<span class="kw">SELECT</span> spend_date, <span class="kw">SUM</span>(spend) <span class="kw">AS</span> spend
+      <span class="kw">FROM</span> campaign_spend <span class="kw">GROUP</span> <span class="kw">BY</span> spend_date) s
+  <span class="kw">ON</span> o.order_date = s.spend_date</code></pre></div>
+
+<p>You don't have to understand the whole query to spot this. Find each <code>JOIN</code>, read its <code>ON</code> line, and ask: <em>could one row on the left match several rows on the right?</em> If the key is a date, a channel name or a region — yes, and the totals are multiplied.</p>
+
+<p><strong>Does the join match how the business connects these things?</strong> Orders link to campaigns through attributed order lines, not the calendar. Spend links to dates directly. Joining the wrong two things on a plausible-sounding key is the model's most characteristic mistake, because the plausible key is what its training data suggests.</p>
+
+<div class="case">
+  <div class="case-title">What 20 seconds on the JOIN catches <span class="case-badge">Real-world pattern</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Question</span><span class="v">"Revenue and ad spend by day, last week"</span><span class="s">Nothing ambiguous in the wording</span></div>
+    <div class="case-cell"><span class="k">The JOIN</span><span class="v">orders JOIN campaign_spend ON date</span><span class="s">3 campaigns ran every day</span></div>
+    <div class="case-cell"><span class="k">Reported</span><span class="v">₹27,60,000</span><span class="s">Clean chart, no errors</span></div>
+    <div class="case-cell"><span class="k">Actual</span><span class="v">₹9,20,000</span><span class="s">Obvious once anyone read past SELECT</span></div>
+  </div>
+  <p class="case-foot">Everything else in that query was fine — the filters, the grouping, the formatting. One join line tripled the number.</p>
+</div>
+
+<h2>WHERE must match what you asked</h2>
+
+<p>If <code>FROM</code> picks the universe, <code>WHERE</code> picks the slice. Read each filter as an English sentence and hold it up against your question.</p>
+
+<p><strong>The date column.</strong> A warehouse usually holds several timestamps per order — created, paid, shipped, delivered — and they answer different questions. "Revenue last month" filtered on <code>shipped_at</code> during a delivery backlog is really "revenue from earlier, shipped late". Also check the range: the last 30 days isn't last calendar month.</p>
+
+<p><strong>The status filter.</strong> The classic quiet failure:</p>
+
+<div class="code"><div class="code-title">Looks careful, drops rows</div><pre><code><span class="cm">-- Silently removes every order whose status is NULL</span>
+<span class="kw">WHERE</span> order_status != &#x27;cancelled&#x27;</code></pre></div>
+
+<p><code>NULL != 'cancelled'</code> is <em>unknown</em> in SQL, and unknown rows are filtered out — so brand-new orders with no status yet disappear. Safer to list what to include: <code>order_status IN ('paid', 'partially_refunded')</code>.</p>
+
+<p><strong>Timezones and division.</strong> If the warehouse stores UTC and you report in local time, a day drawn in the wrong zone moves your busiest hours into the wrong day. And <code>SUM(revenue) / SUM(spend)</code> breaks on zero-spend days unless it's wrapped in <code>NULLIF</code> or <code>SAFE_DIVIDE</code>.</p>
+
+<aside class="callout">
+  <p><strong>The one-sentence test:</strong> translate the whole WHERE clause into words — "paid orders created last month, in IST, excluding full refunds" — and read it back against your question. If anyone on the team would object to part of that sentence, you've found the bug before it found your meeting.</p>
+</aside>
+
+<h2>GROUP BY must match the noun</h2>
+
+<p>The grain — what each output row represents — is where "revenue by campaign" quietly becomes something else.</p>
+
+<p><strong>Does the grouping match the noun in your question?</strong> "Customers" means grouping by <code>customer_id</code>. A query grouping by <code>order_id</code> and calling the result "customers" counts repeat buyers once per order, and inflates every ratio built on it.</p>
+
+<p><strong>Is the DISTINCT counting the right thing?</strong> <code>COUNT(DISTINCT order_id)</code> and <code>COUNT(DISTINCT customer_id)</code> differ by your repeat-purchase rate. Make sure the thing inside the count is the entity you asked about, not its neighbour.</p>
+
+<p>A useful tell: clean multiples like 2× or 3× usually mean a fan-out join. Numbers that are plausible but off by an awkward factor like 1.3× usually mean the grain is wrong.</p>
+
+<h2>The routine</h2>
+
+<ol class="steps">
+  <li><strong>FROM and JOINs — 25 seconds</strong>Recognise every table. For each join, ask whether one row can match several. Dates and names are the usual multipliers.</li>
+  <li><strong>WHERE — 20 seconds</strong>Translate each filter to English. Right date column and range, cancellations and refunds handled by inclusion, NULLs safe, timezone converted.</li>
+  <li><strong>GROUP BY — 10 seconds</strong>The grouped columns equal the noun in your question; the COUNT DISTINCT targets that same entity.</li>
+  <li><strong>Cost and sanity — 5 seconds</strong>Check the dry-run byte estimate — terabytes for a routine question means a missing filter. Then: does the result pass a smell test against last month?</li>
+</ol>
+
+<p>If all four pass, trust the number the way you'd trust a junior analyst's checked work. If any step raises a question you can't settle in the minute, don't ship it — send the SQL to an analyst with the step that failed, or ask the tool to regenerate with a precise correction ("use net_revenue, exclude full refunds, group by customer_id"). A specific correction gets a far better second attempt than "try again".</p>
+
+<aside class="callout warn">
+  <p><strong>What the minute doesn't cover:</strong> whether the data underneath is right. A perfectly audited query against a pipeline that stopped loading on the 14th still reports a 60% drop as fact. The audit checks that your question was translated faithfully — freshness monitoring checks there was something faithful to translate.</p>
+</aside>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">Revenue comes out exactly 3× too high, with no errors. Where do you look first?</p>
+  <details><summary>The SELECT list</summary><p><span class="wrong">No.</span> SELECT is cosmetic — a wrong set of rows can't be fixed there.</p></details>
+  <details><summary>The JOIN keys — one row matching many</summary><p><span class="right">Exactly.</span> A join on a non-unique key like a date multiplies every row by the number of matches.</p></details>
+  <details><summary>The GROUP BY</summary><p><span class="wrong">Not first.</span> Grain errors give awkward multiples; a clean 3× points at a fan-out join.</p></details>
+</div>
+
+<h2>Questions people ask</h2>
+
+<div class="faq">
+  <details><summary>What if I can't read SQL at all?</summary><p>Read the nouns. Table names after FROM and JOIN, column names in WHERE, and the list after GROUP BY carry most of the audit — and they're words you already know. You can also ask the tool to explain the query one clause per sentence, then audit the sentences.</p></details>
+  <details><summary>What if it uses a table I've never heard of?</summary><p>Treat that as a finding. An unfamiliar table is usually deprecated, raw or staging — ask why it was chosen before trusting anything built on it.</p></details>
+  <details><summary>Does this catch every mistake?</summary><p>No. It catches translation mistakes — the query answering a different question. Stale pipelines, missing sources and definitions the team disagrees on need monitoring, source checks and a shared metric definition.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>Read inside out: FROM and JOINs, then WHERE, then GROUP BY.</li>
+    <li>On every join, ask whether one row can match several.</li>
+    <li>Say the WHERE clause in English and compare it with your question.</li>
+    <li>GROUP BY should equal the noun; the DISTINCT should count that same thing.</li>
+    <li>Finish with the byte estimate and a smell test — and escalate with the step that failed.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../ai-agent-ad-account-write-access/">
+        <span class="tag">AI · Ad accounts</span>
+        <h3>Your AI agent can now edit your ad account</h3>
+        <span class="hand">(read is a report, write is a risk)</span>
+        <p>AI agents can now pause ads and move budgets. Why a wrong action costs far more than a wrong answer, and the permission setup that keeps an agent useful without letting it run up a bill.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="../what-ai-analyst-cannot-do/">
+        <span class="tag">AI analytics</span>
+        <h3>What an AI analyst can&#x27;t do yet</h3>
+        <span class="hand">(an honest list, from someone who uses them daily)</span>
+        <p>Eight real limits of AI data analysts — why each one exists, which are shrinking, and four tests to run before you trust one with a board-deck number.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="../seven-questions-before-trusting-ai/">
+        <span class="tag">AI analytics</span>
+        <h3>Seven questions to ask before you trust an AI&#x27;s answer about your data</h3>
+        <span class="hand">(before you paste it into the deck)</span>
+        <p>An AI-written query can run cleanly and still answer a different question. Seven quick checks — from the table it chose to timezones and refunds — that catch silent failures before a number reaches leadership.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>

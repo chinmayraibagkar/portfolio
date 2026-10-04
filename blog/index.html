@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Chinmay Raibagkar</title>
+  <meta name="description" content="Notes on marketing analytics, ad platforms and using AI on real business data." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="Blog — Chinmay Raibagkar" />
+  <meta property="og:description" content="Notes on marketing analytics, ad platforms and using AI on real business data." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../style.css?v=5" />
+  <link rel="stylesheet" href="../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../" class="blog-nav-link">Home</a>
+      <a href="../blog/" class="blog-nav-link" aria-current="page">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main wide">
+    <section class="blog-hero">
+      <span class="post-eyebrow">Blog</span>
+      <h1>Notes from the <span class="gradient-text">data side of marketing</span></h1>
+      <p>Practical write-ups on ad platforms, testing, SQL and putting AI to work on real business data — each one built around a mistake worth avoiding.</p>
+    </section>
+    <div class="post-grid">
+      <a class="post-card" href="ai-agent-ad-account-write-access/">
+        <span class="tag">AI · Ad accounts</span>
+        <h3>Your AI agent can now edit your ad account</h3>
+        <span class="hand">(read is a report, write is a risk)</span>
+        <p>AI agents can now pause ads and move budgets. Why a wrong action costs far more than a wrong answer, and the permission setup that keeps an agent useful without letting it run up a bill.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="what-ai-analyst-cannot-do/">
+        <span class="tag">AI analytics</span>
+        <h3>What an AI analyst can&#x27;t do yet</h3>
+        <span class="hand">(an honest list, from someone who uses them daily)</span>
+        <p>Eight real limits of AI data analysts — why each one exists, which are shrinking, and four tests to run before you trust one with a board-deck number.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="seven-questions-before-trusting-ai/">
+        <span class="tag">AI analytics</span>
+        <h3>Seven questions to ask before you trust an AI&#x27;s answer about your data</h3>
+        <span class="hand">(before you paste it into the deck)</span>
+        <p>An AI-written query can run cleanly and still answer a different question. Seven quick checks — from the table it chose to timezones and refunds — that catch silent failures before a number reaches leadership.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="semantic-layers-vs-prompting/">
+        <span class="tag">AI analytics</span>
+        <h3>Semantic layers vs. prompting: where business definitions should live</h3>
+        <span class="hand">(definitions, not suggestions)</span>
+        <p>A metric definition in a prompt is a suggestion the model usually follows. In a semantic layer it is fixed SQL. Where each belongs, a simple test for deciding, and a one-week way to start.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="preventing-llm-invented-columns/">
+        <span class="tag">AI analytics</span>
+        <h3>How to keep an LLM from inventing a column name</h3>
+        <span class="hand">(four layers, zero model upgrades)</span>
+        <p>LLMs invent column names because they can&#x27;t see your schema. Four engineering layers — retrieval, constraint, dry-run validation and repair — fix it without a bigger model, plus the one failure they can&#x27;t catch.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="ad-creative-ab-test-significance/">
+        <span class="tag">Ad testing</span>
+        <h3>Your winning ad might be a coin flip</h3>
+        <span class="hand">(check before you scale)</span>
+        <p>Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="pmax-channel-performance-report/">
+        <span class="tag">Google Ads</span>
+        <h3>Where your PMax money actually goes</h3>
+        <span class="hand">(read the channel report)</span>
+        <p>Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="audit-ai-query-60-seconds/">
+        <span class="tag">SQL · AI</span>
+        <h3>How to audit an AI-generated query in 60 seconds</h3>
+        <span class="hand">(three places to look)</span>
+        <p>A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check.</p>
+        <span class="meta">5 min read</span>
+      </a>
+    </div>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../">Portfolio</a> · <a href="../blog/">All posts</a></p>
+  </footer>
+  <script src="../blog/blog.js?v=2" defer></script>
+</body>
+</html>

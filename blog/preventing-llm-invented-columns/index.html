@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to keep an LLM from inventing a column name — Chinmay Raibagkar</title>
+  <meta name="description" content="LLMs invent column names because they can&#x27;t see your schema. Four engineering layers — retrieval, constraint, dry-run validation and repair — fix it without a bigger model, plus the one failure they can&#x27;t catch." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="How to keep an LLM from inventing a column name — Chinmay Raibagkar" />
+  <meta property="og:description" content="LLMs invent column names because they can&#x27;t see your schema. Four engineering layers — retrieval, constraint, dry-run validation and repair — fix it without a bigger model, plus the one failure they can&#x27;t catch." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">AI analytics</span>
+        <h1 class="post-title">How to keep an LLM from inventing a column name <span class="post-hand">(four layers, zero model upgrades)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 8 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>Invented columns are a retrieval failure, not a reasoning failure</strong> — the model was asked to write SQL against a schema it couldn't see.</li><li><strong>Four layers:</strong> retrieve the real schema, constrain it to what's relevant, dry-run before executing, repair from the literal error.</li><li><strong>Valid isn't right.</strong> None of this catches a real column used wrongly — column descriptions and curated views do.</li></ul>
+        <p class="bottom">fix what the model sees, not the model</p>
+      </section>
+      <div class="prose">
+<p>Ask a language model for "average order value by city last quarter" without showing it your schema, and it will write something confident:</p>
+
+<div class="code"><div class="code-title">Plausible, and wrong four ways</div><pre><code><span class="kw">SELECT</span> city, <span class="kw">AVG</span>(order_value) <span class="kw">AS</span> aov
+<span class="kw">FROM</span> orders
+<span class="kw">WHERE</span> order_date &gt;= <span class="kw">DATE_SUB</span>(<span class="kw">CURRENT_DATE</span>(), <span class="kw">INTERVAL</span> 3 <span class="kw">MONTH</span>)
+<span class="kw">GROUP</span> <span class="kw">BY</span> city;</code></pre></div>
+
+<p>Your table is actually <code>shop_orders</code>. There's no <code>order_value</code> — the field is <code>net_amount</code>. City isn't on the order at all; it's <code>billing_city</code> on <code>customers</code>. And <code>order_date</code> doesn't exist — there's a <code>placed_at</code> timestamp.</p>
+
+<p>That isn't a bad model. It's a model doing exactly what it was asked with information it never had. The fix is four layers of plain engineering, and "upgrade the model" isn't one of them.</p>
+
+<h2>Why it happens</h2>
+
+<p>A language model writes the most plausible continuation of its context. It has seen a huge amount of public SQL, so its idea of an orders table is <code>order_id</code>, <code>customer_id</code>, <code>order_date</code>, <code>order_value</code>, <code>status</code> — what most tutorial schemas look like.</p>
+
+<p>If your schema isn't in the context window, the model has no signal that it's guessing. "I know this column exists" and "this is the likeliest name for a column like this" feel the same from the inside, and produce the same confident output.</p>
+
+<aside class="callout">
+  <p><strong>The reframe:</strong> this is a <em>retrieval</em> problem. Fix what the model can see and most of it goes away — which makes it an engineering problem with a known answer, unlike genuinely hard limits such as proving causation.</p>
+</aside>
+
+<h2>The four layers</h2>
+
+<ol class="steps">
+  <li><strong>Retrieve — put the real schema in context</strong>Pull actual table and column names, types and descriptions from the warehouse. The model can't invent what it's been handed.</li>
+  <li><strong>Constrain — only what's relevant</strong>Ten relevant tables beat two hundred. Too much schema hurts as much as too little, just differently.</li>
+  <li><strong>Validate — dry-run before executing</strong>A dry run checks the SQL against the real schema without running it, fails on any bad column, and costs nothing.</li>
+  <li><strong>Repair — feed the error back, retry, stop</strong>A validation error names the exact bad identifier. One or two retries fix most of what's left; after that, ask the person.</li>
+</ol>
+
+<h3>Layer 1: Retrieve</h3>
+
+<p>Get the schema from the warehouse itself. In BigQuery, <code>INFORMATION_SCHEMA</code> has everything you need — including the column descriptions that carry real business knowledge:</p>
+
+<div class="code"><div class="code-title">Schema for the model, straight from the warehouse</div><pre><code><span class="kw">SELECT</span>
+  c.table_name,
+  c.column_name,
+  c.data_type,
+  c.is_nullable,
+  f.description,                            <span class="cm">-- where the business knowledge lives</span>
+  c.is_partitioning_column                  <span class="cm">-- tells the model which date to filter on</span>
+<span class="kw">FROM</span> `project.shop.INFORMATION_SCHEMA.COLUMNS` c
+<span class="kw">LEFT</span> <span class="kw">JOIN</span> `project.shop.INFORMATION_SCHEMA.COLUMN_FIELD_PATHS` f
+  <span class="kw">ON</span>  f.table_name  = c.table_name
+  <span class="kw">AND</span> f.column_name = c.column_name
+<span class="kw">ORDER</span> <span class="kw">BY</span> c.table_name, c.ordinal_position;</code></pre></div>
+
+<aside class="callout warn">
+  <p><strong>Column descriptions are the best return on effort here, and almost nobody writes them.</strong> A description like <em>"Includes tax and shipping — do not use for revenue; use net_amount"</em> prevents a wrong answer no model would have caught. It lives in the warehouse, so every tool sees it, and it takes about an hour for your 20 busiest tables.</p>
+</aside>
+
+<h3>Layer 2: Constrain</h3>
+
+<p>Sending all 200 tables creates three problems: the right one competes for attention with 199 others, every question costs more tokens, and long contexts make instructions easier to ignore. Ways to narrow it, from least to most effort:</p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Approach</th><th>How it works</th><th>Good for</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Curated allowlist</strong></td><td>Only expose clean, documented views</td><td>Almost everyone — and it doubles as a semantic layer</td></tr>
+    <tr><td><strong>Keyword matching</strong></td><td>Question mentions "campaign" → include campaign tables</td><td>Small schemas</td></tr>
+    <tr><td><strong>Embedding search</strong></td><td>Retrieve the tables whose descriptions best match the question</td><td>Hundreds of tables</td></tr>
+    <tr><td><strong>Two passes</strong></td><td>A cheap call picks tables by name; a second gets full schemas for those only</td><td>50+ tables — usually the best trade-off</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Too much schema fails more subtly than too little. The query is valid and runs — against <code>orders_old</code> instead of <code>shop_orders</code>, because both were offered and nothing said which was current. A validator can't catch that. Only constraint can.</p>
+
+<h3>Layer 3: Validate</h3>
+
+<p>This is the layer that makes a probabilistic system safe, and it's almost free. A BigQuery dry run parses and plans the query without executing it:</p>
+
+<div class="code"><div class="code-title">Dry-run request</div><pre><code>POST /bigquery/v2/projects/{projectId}/queries
+{ &quot;query&quot;: &quot;&lt;generated sql&gt;&quot;, &quot;dryRun&quot;: true, &quot;useLegacySql&quot;: false }</code></pre></div>
+
+<p>You get back one of two useful things:</p>
+<ul>
+  <li><strong>A precise error</strong> — <code>Unrecognized name: order_value at [1:18]</code>. Nothing ran, nothing was billed.</li>
+  <li><strong>The bytes it would scan</strong> — so you can refuse anything over a cost ceiling <em>before</em> it runs. For extra safety, set <code>maximumBytesBilled</code> on the real run so it fails rather than overspends.</li>
+</ul>
+
+<aside class="callout">
+  <p><strong>Validation isn't optional, and it isn't expensive.</strong> Any tool generating SQL can dry-run it in under a second for free. Executing generated SQL without that step is skipping the cheapest safety check there is.</p>
+</aside>
+
+<h3>Layer 4: Repair</h3>
+
+<p>A validation error is an unusually good correction signal because it's specific — it names the identifier and its position, and BigQuery often suggests the nearest real column.</p>
+
+<ol class="steps">
+  <li><strong>The dry run fails with a named column</strong>"Unrecognized name: order_value. Did you mean net_amount?"</li>
+  <li><strong>Send the literal error plus the relevant schema back</strong>Don't paraphrase it — the exact text is the useful part.</li>
+  <li><strong>Regenerate and validate again</strong>Same gate, no special cases.</li>
+  <li><strong>Stop after two tries and ask</strong>If it still fails, the question is usually ambiguous, and a third guess won't fix that. "I couldn't find a column for X — did you mean one of these?" is the honest answer.</li>
+</ol>
+
+<h2>What this doesn't catch</h2>
+
+<p>All four layers make sure the SQL is <strong>valid</strong>. None of them make sure it's <strong>right</strong>.</p>
+
+<div class="case">
+  <div class="case-title">Valid, runs fine, still wrong <span class="case-badge">The leftover risk</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Question</span><span class="v">"Revenue last month?"</span></div>
+    <div class="case-cell"><span class="k">Generated</span><span class="v">SUM(order_total)</span><span class="s">A real column — passes every check</span></div>
+    <div class="case-cell"><span class="k">The problem</span><span class="v">Includes tax and shipping</span><span class="s">And no filter on cancelled orders</span></div>
+    <div class="case-cell"><span class="k">Result</span><span class="v">Overstated by ~20%</span><span class="s">No error anywhere</span></div>
+  </div>
+</div>
+
+<p>Two things address this: <strong>column descriptions</strong> that say which column <em>not</em> to use, and <strong>curated views</strong> that expose <code>net_revenue</code> and simply don't expose <code>order_total</code>. And the SQL has to be visible, so a person can catch what's left.</p>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">The dry run fails with "Unrecognized name: order_value". What's the right move?</p>
+  <details><summary>Send the exact error plus the schema back and retry — twice at most</summary><p><span class="right">Exactly.</span> A named error is a precise correction signal; after two misses, the question itself is ambiguous.</p></details>
+  <details><summary>Fine-tune the model on your schema</summary><p><span class="wrong">No.</span> Schemas change; a fine-tune goes stale immediately. Retrieval is always current.</p></details>
+  <details><summary>Send all 200 tables so it can find the right one</summary><p><span class="wrong">No.</span> That invites wrong-table picks — a quieter and worse failure.</p></details>
+</div>
+
+<h2>Questions people ask</h2>
+
+<div class="faq">
+  <details><summary>Does a bigger model fix this?</summary><p>It lowers the rate without changing the shape. A big model without your schema still guesses; a smaller one with the schema, a dry run and a repair loop is more reliable.</p></details>
+  <details><summary>What if my database has no dry run?</summary><p>Use <code>EXPLAIN</code> (Postgres and others) or a <code>LIMIT 0</code> run. At minimum, parse the SQL and check every identifier against your cached schema before executing.</p></details>
+  <details><summary>Does this slow things down?</summary><p>Barely. A dry run is sub-second and the repair loop only fires on failure — when it turns an error the user would have seen into a fixed query they never notice.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>Invented columns are a retrieval failure — change what the model sees.</li>
+    <li>Retrieve, constrain, dry-run, repair from the literal error.</li>
+    <li>Cap retries at two, then ask the person.</li>
+    <li>Valid isn't right: descriptions and curated views handle real-but-wrong columns.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../ad-creative-ab-test-significance/">
+        <span class="tag">Ad testing</span>
+        <h3>Your winning ad might be a coin flip</h3>
+        <span class="hand">(check before you scale)</span>
+        <p>Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly.</p>
+        <span class="meta">8 min read</span>
+      </a>
+      <a class="post-card" href="../pmax-channel-performance-report/">
+        <span class="tag">Google Ads</span>
+        <h3>Where your PMax money actually goes</h3>
+        <span class="hand">(read the channel report)</span>
+        <p>Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="../audit-ai-query-60-seconds/">
+        <span class="tag">SQL · AI</span>
+        <h3>How to audit an AI-generated query in 60 seconds</h3>
+        <span class="hand">(three places to look)</span>
+        <p>A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check.</p>
+        <span class="meta">5 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>

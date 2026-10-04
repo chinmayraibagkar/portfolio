@@ -1,0 +1,160 @@
+<!--meta
+{
+  "title": "Your AI agent can now edit your ad account",
+  "hand": "(read is a report, write is a risk)",
+  "tag": "AI · Ad accounts",
+  "description": "AI agents can now pause ads and move budgets. Why a wrong action costs far more than a wrong answer, and the permission setup that keeps an agent useful without letting it run up a bill.",
+  "minutes": 7,
+  "date": "2026-10-04",
+  "order": 8,
+  "tldr": [
+    "<strong>A wrong answer costs a bad decision you can still catch. A wrong action costs money every hour until someone notices.</strong>",
+    "<strong>Damage ≈ size of the change × hours unnoticed × share wasted.</strong> The fastest fixes are a smaller allowed change and a shorter time-to-notice — not a smarter model.",
+    "<strong>The setup:</strong> reads run freely, small writes need a before → after approval, big or irreversible changes stay human-only."
+  ],
+  "bottom": "obedient is not the same as safe"
+}
+-->
+<p>It's 9 PM on a Friday. A marketer hooks an AI assistant up to the ad account and types one instruction before closing the laptop: <em>"Shift budget from the weak ad sets into the best one."</em></p>
+
+<p>The agent does exactly that. It pauses four ad sets — one of them only three days old and still collecting delayed conversions — and pushes the freed budget into the top performer, which goes from ₹15,000 a day to ₹60,000 a day. Nobody opens the account again until 9 AM on Monday.</p>
+
+<p>Sixty hours later, the "best" ad set has spent an extra <strong>₹1,12,500</strong>, at three times its normal cost per acquisition. The model didn't make anything up. It followed the instruction to the letter — and that's the problem worth planning for now that agents can act, not just answer.</p>
+
+<div class="case">
+  <div class="case-title">One sentence, one weekend <span class="case-badge">Incident review</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Instruction</span><span class="v">"Shift budget to the best one"</span><span class="s">No limits stated</span></div>
+    <div class="case-cell"><span class="k">Budget change</span><span class="v">₹15,000 → ₹60,000 / day</span><span class="s">+₹45,000 a day on one ad set</span></div>
+    <div class="case-cell"><span class="k">Unnoticed for</span><span class="v">60 hours</span><span class="s">Friday 9 PM → Monday 9 AM</span></div>
+    <div class="case-cell"><span class="k">Extra spend</span><span class="v">₹1,12,500</span><span class="s">₹45,000 × 60 ÷ 24</span></div>
+    <div class="case-cell"><span class="k">CPA on that spend</span><span class="v">₹500 → ₹1,500</span><span class="s">4× budget, same audience</span></div>
+    <div class="case-cell"><span class="k">Wasted vs target CPA</span><span class="v">≈ ₹75,000</span><span class="s">Two-thirds of the extra spend</span></div>
+  </div>
+  <p class="case-foot">Each step was technically fine. What was missing: a cap on how big a change the agent could make on its own, and a person signing off on anything bigger.</p>
+</div>
+
+<h2>Reading and writing are different jobs</h2>
+
+<p>AI assistants reach ad platforms through MCP servers — connectors that hand the model a menu of "tools" it can call. Some of those tools only <em>read</em>: pull a report, break spend down by placement, compare two weeks. Others <em>write</em>: pause an ad, change a budget, launch a campaign.</p>
+
+<p>The official Google Ads MCP server is read-only. Meta's Ads MCP, in beta through 2026, includes campaign-management tools alongside reporting, and plenty of third-party connectors do both across several platforms. So "connect the AI to the ad account" can mean two very different levels of risk depending on which tools come along.</p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th></th><th>Read tools</th><th>Write tools</th></tr></thead>
+  <tbody>
+    <tr><td><strong>What they do</strong></td><td>Reports, breakdowns, diagnostics</td><td>Pause, launch, change budgets and bids</td></tr>
+    <tr><td><strong>Worst case</strong></td><td>A wrong answer you can check before acting</td><td>Spend that keeps happening until someone looks</td></tr>
+    <tr><td><strong>Time to damage</strong></td><td>None until a person acts on it</td><td>Minutes — and it compounds overnight and on weekends</td></tr>
+    <tr><td><strong>Reversible?</strong></td><td>Nothing changed</td><td>Not always — some edits reset learning</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>How much can one bad action cost?</h2>
+
+<p>A useful way to size the risk: <strong>damage ≈ how much the change added × how long nobody noticed × how much of it was wasted.</strong> Teams usually think about the first term. The second is the one that hurts, because agents are happy to work while everyone's asleep.</p>
+
+<div class="widget" data-widget="blast-radius">
+  <p class="widget-title">Size the blast radius</p>
+  <label>Extra daily spend from the change: <strong data-show="extra"></strong>
+    <input type="range" name="extra" min="5000" max="200000" step="5000" value="45000"></label>
+  <label>Time until someone notices: <strong data-show="hours"></strong>
+    <input type="range" name="hours" min="1" max="96" step="1" value="60"></label>
+  <label>Share of that spend wasted: <strong data-show="waste"></strong>
+    <input type="range" name="waste" min="0.1" max="1" step="0.01" value="0.67"></label>
+  <div class="out"></div>
+  <p class="verdict"></p>
+</div>
+
+<p>Play with it and notice what shrinks the number fastest: a <strong>smaller allowed change</strong> and a <strong>shorter time-to-notice</strong>. Both are settings you control today. Neither needs a better model.</p>
+
+<h2>Gates that actually work</h2>
+
+<p>The trick is to sort every tool call <em>before</em> it runs. In a typical week, the vast majority of an agent's calls are reads — something like four out of five. A small slice are minor, reversible writes, and a sliver are big or irreversible ones. Gate the writes and you remove almost all of the risk for a few taps a week.</p>
+
+<ol class="steps">
+  <li><strong>Read-only — runs automatically</strong>Reports, breakdowns, search-term pulls, diagnostics. This is where most of the value lives anyway.</li>
+  <li><strong>Small, reversible writes — approve each one</strong>Pause or resume one ad, move a budget by up to 20%, add a negative keyword. Shown as a plain before → after and approved with one tap.</li>
+  <li><strong>Human-only — not available to the agent</strong>New campaigns, budget jumps above your cap, bid-strategy or audience changes, deleting anything, billing. The agent can draft these; a person makes them.</li>
+</ol>
+
+<aside class="callout">
+  <p><strong>A pattern that holds up:</strong> keep the conversational assistant read-only, route any change through a separate flow where every money-moving step waits for a person, and never give write tools to scheduled or unattended runs — there's nobody there to say no.</p>
+</aside>
+
+<p>The approval has to be readable, too. <em>"Allow tool call update_adset?"</em> isn't an approval, it's a rubber stamp. Compare it with: <em>Ad set "Prospecting – Broad": daily budget ₹15,000 → ₹60,000 (+300%).</em> Anyone would pause at that.</p>
+
+<aside class="callout warn">
+  <p><strong>Agents judge on immature data.</strong> An agent deciding what's "weak" from yesterday's numbers will pause ads whose conversions simply haven't landed yet. Put conversion lag into the rules — for example, nothing gets paused on fewer than three fully matured days.</p>
+</aside>
+
+<h2>Log every write, then look at what happened next</h2>
+
+<p>Every change an agent makes should land in a table: who asked for it, what changed, who approved it, when. Then a single query answers the question that matters each week — <em>what did the agents do, and did any of it hurt?</em></p>
+
+```sql title="Agent changes in the last 7 days, and the 48 hours after each"
+WITH changes AS (
+  SELECT change_id, asked_by, approved_by, object_id,
+         change_type, before_value, after_value, applied_at
+  FROM agent_change_log
+  WHERE applied_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 7 DAY)
+),
+followup AS (
+  SELECT c.change_id,
+         SUM(h.spend)       AS spend_48h,
+         SUM(h.conversions) AS conv_48h
+  FROM changes c
+  JOIN ad_stats_hourly h
+    ON h.object_id = c.object_id
+   AND h.hour BETWEEN c.applied_at AND TIMESTAMP_ADD(c.applied_at, INTERVAL 48 HOUR)
+  GROUP BY c.change_id
+)
+SELECT c.applied_at,
+       c.change_type,
+       c.object_id,
+       CONCAT(c.before_value, ' → ', c.after_value)   AS change,
+       COALESCE(c.approved_by, 'NOT APPROVED')         AS approved_by,
+       ROUND(f.spend_48h)                              AS spend_next_48h,
+       ROUND(f.spend_48h / NULLIF(f.conv_48h, 0))      AS cpa_next_48h
+FROM changes c
+LEFT JOIN followup f USING (change_id)
+ORDER BY c.applied_at DESC;
+```
+
+<p>Two kinds of row deserve a look every week: any change marked <strong>NOT APPROVED</strong>, and any change followed by a CPA well above target in the next two days.</p>
+
+<ul class="checklist">
+  <li><strong>Start read-only.</strong> Give the agent reporting access for the first few weeks. You get most of the benefit and none of the exposure.</li>
+  <li><strong>Cap every write.</strong> No single action may move a budget by more than 20% or touch more than one campaign. Anything bigger goes to a person.</li>
+  <li><strong>Alert on every write.</strong> A message to email or chat the moment the agent changes anything, with the before → after. A short time-to-notice is the cheapest safety net there is.</li>
+</ul>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">You want an AI agent helping with your Meta account. Which setup is safest while still being useful?</p>
+  <details><summary>Full access, with "be careful with budgets" in the prompt</summary><p><span class="wrong">Not quite.</span> A prompt is a request, not a limit. The agent can still make any change the connection allows.</p></details>
+  <details><summary>Reads automatic, small writes approved as before → after, big changes human-only</summary><p><span class="right">Exactly.</span> Reads carry most of the value; gating and capping the few writes removes nearly all of the blast radius.</p></details>
+  <details><summary>No AI access until the models stop making mistakes</summary><p><span class="wrong">Too cautious.</span> The risk is in actions, not intelligence. Read-only access is safe today and saves hours of reporting.</p></details>
+</div>
+
+<h2>Questions people ask</h2>
+
+<div class="faq">
+  <details><summary>What is an MCP server for ads?</summary><p>MCP (Model Context Protocol) is an open standard for connecting AI assistants to other software. An ads MCP server exposes tools like "get campaign report" or "update ad set budget" that the assistant can call with whatever permissions the connection has.</p></details>
+  <details><summary>Can an AI agent change my budgets?</summary><p>Only if the connector includes write tools and your account grants the permission. Check the tool list before you connect — read-only and read-write connectors look identical from the chat window.</p></details>
+  <details><summary>How do I stop expensive changes?</summary><p>Not with the prompt. Use access settings: read-only by default, a cap on any single change, approval for every write, and alerts on anything that changes. Keep big or irreversible actions for people.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A wrong answer costs a decision; a wrong action costs money every hour until someone notices.</li>
+    <li>Most of an agent's value comes from read access — start there.</li>
+    <li>Cap the size of any single write, and make approvals a readable before → after.</li>
+    <li>Alert on every write: shortening time-to-notice beats a smarter model.</li>
+    <li>Log every agent change and review what happened in the 48 hours after it.</li>
+  </ul>
+</div>

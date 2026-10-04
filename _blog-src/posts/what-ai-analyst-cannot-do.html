@@ -1,0 +1,137 @@
+<!--meta
+{
+  "title": "What an AI analyst can't do yet",
+  "hand": "(an honest list, from someone who uses them daily)",
+  "tag": "AI analytics",
+  "description": "Eight real limits of AI data analysts — why each one exists, which are shrinking, and four tests to run before you trust one with a board-deck number.",
+  "minutes": 8,
+  "date": "2026-10-04",
+  "order": 7,
+  "tldr": [
+    "<strong>Eight limits, and only some are shrinking.</strong> Causation and accountability are structural — no bigger model fixes them.",
+    "<strong>Consistency comes from architecture</strong> (fixed metric definitions), not from model size.",
+    "<strong>Data the tool can't see is the #1 source of confident wrong answers</strong> — and that one is on us, not the model."
+  ],
+  "bottom": "a fast junior who has read the whole schema and knows nothing about the business"
+}
+-->
+<p>A lot of AI-analytics marketing hints that the analyst job is done: ask a question, get an answer, the data team can go home. I use these tools every working day, and that isn't the experience. They're genuinely useful — and the space between what they do well and what they're sold as doing is exactly where trust gets burned.</p>
+
+<p>So here's the list I wish I'd had before relying on one: eight things an AI analyst still can't do, why each limit exists, and whether it's getting smaller.</p>
+
+<h2>1. It doesn't know what your columns mean</h2>
+
+<p>Give a model your schema and it sees table names, column names, types and — if anyone wrote them — descriptions. What it doesn't see is the context that decides whether an answer is right.</p>
+
+<p>Say a <code>sales</code> table has <code>amount</code>, <code>amount_net</code>, <code>paid_value</code> and <code>invoice_total</code>. Which one is revenue? That depends on whether tax is in, whether <code>amount</code> was abandoned after a migration, and whether <code>paid_value</code> stays empty for cash-on-delivery orders. None of that is visible in the schema.</p>
+
+<aside class="callout">
+  <p><strong>Why:</strong> the knowledge isn't in the database. It's in someone's head or an old chat thread.</p>
+  <p><strong>Shrinking?</strong> Yes — through better inputs, not better models. Column descriptions and written-down metric definitions close this gap directly.</p>
+</aside>
+
+<h2>2. It can't tell you the data is broken</h2>
+
+<p>It queries what's there. If the spend pipeline quietly stopped loading on the 14th, it will report — confidently — that spend fell 60%, because in the data, it did.</p>
+
+<p>People catch this with a gut feel built from months of watching the same numbers. A model has a sense of what <em>businesses</em> look like in general, not yours. Anomaly alerts help a bit, and bring their own false alarms: a real festive-season spike looks just like a data error to a statistical test.</p>
+
+<h2>3. It can't prove cause and effect</h2>
+
+<p>Ask "did the campaign work?" and you get a correlation in careful language. Proving causation needs a counterfactual — what would have happened without the campaign — and that never happened, so it isn't in your data.</p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Kind of question</th><th>Example</th><th>Can an AI analyst answer it?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Descriptive</strong></td><td>Revenue by channel last quarter</td><td>Yes — this is what SQL is for</td></tr>
+    <tr><td><strong>Diagnostic</strong></td><td>Why did CAC rise?</td><td>Partly — it can break the change down, not rank true causes</td></tr>
+    <tr><td><strong>Causal</strong></td><td>Would sales have risen anyway?</td><td>No — needs a holdout designed before the fact</td></tr>
+  </tbody>
+</table>
+</div>
+
+<aside class="callout warn">
+  <p><strong>This one isn't shrinking.</strong> It's not about capability. Incrementality needs a control group created on purpose, in advance. No model can retrieve an experiment nobody ran.</p>
+</aside>
+
+<h2>4. It can't decide what matters</h2>
+
+<p>"Should we cut this campaign?" depends on cash, growth targets, what was promised to the board, whether the channel is strategic beyond its ROAS, and whether the team has time for the alternative. None of that lives in a warehouse.</p>
+
+<p>The tool can tell you the campaign returns 0.8x on contribution. Whether that means "cut it" or "a planned investment we agreed to fund for two quarters" is a business call with inputs it can't see.</p>
+
+<h2>5. It can't stay consistent on its own</h2>
+
+<p>Ask the same question in two chats and you can get two queries with slightly different filters. "Revenue" on Monday includes tax; on Thursday, after a differently-worded question, it doesn't.</p>
+
+<p>That's the biggest practical objection to putting an AI analyst in front of leadership. A dashboard is at least <em>consistently</em> wrong. An AI analyst can be inconsistently right — two people quote two numbers for one metric in the same meeting, and trust in the whole setup evaporates.</p>
+
+<aside class="callout">
+  <p><strong>Why:</strong> generation is probabilistic, and instructions in a prompt are suggestions.</p>
+  <p><strong>Shrinking?</strong> Yes, by design rather than model size: define core metrics once, as fixed SQL, and make every query resolve against them. How many metrics are covered that way is the real measure of consistency.</p>
+</aside>
+
+<h2>6. It loses the thread on long investigations</h2>
+
+<p>"Why did CAC go up last month?" isn't one query. It's: did spend rise or did customers fall? Which channel? Did that channel's CPM jump or its conversion rate drop? Did that line up with a creative change or an audience change? Each step depends on the previous answer.</p>
+
+<p>Today's tools manage some of this and drift on longer chains — an early wrong turn compounds, because nothing in the loop stops to ask whether the whole line of inquiry still makes sense. <strong>Shrinking?</strong> Noticeably — this is where capability has moved most. Long chains still need a person checking the forks.</p>
+
+<h2>7. It can't see data you never connected</h2>
+
+<p>Obvious, and forgotten constantly. If offline sales live in a spreadsheet, influencer payments in someone's inbox and return-to-origin data in a courier portal nobody exports, then its answer on "total marketing efficiency" is wrong — and it won't say so, because it can't know those things exist.</p>
+
+<p><strong>In my experience this causes more confidently wrong answers than anything else on this list</strong>, and the model has nothing to do with it. A human analyst asks "is this everything?" A tool assumes what it can see is all there is.</p>
+
+<h2>8. It can't be accountable</h2>
+
+<p>When a number in a board deck is wrong, someone owns it — and that changes behaviour. An analyst who'll be asked about a number checks it differently.</p>
+
+<p>A good tool can show its SQL, its assumptions and its row counts so that a person <em>can</em> take responsibility. The checking still has to happen; the tool's job is to make it cheap, not to remove it.</p>
+
+<h2>How to evaluate one in an afternoon</h2>
+
+<ol class="steps">
+  <li><strong>Does it show the SQL?</strong>Ask three questions. Reject any answer that arrives without its query — you can't check a join, filter or grain you can't see.</li>
+  <li><strong>Does it admit when it doesn't know?</strong>Ask about a metric nobody defined. A tool that quietly guesses here will quietly guess where it matters. "Revenue is ambiguous — gross or net?" is the right behaviour.</li>
+  <li><strong>Is it consistent?</strong>Same question, three phrasings, three separate sessions. Compare the SQL. Variance here becomes variance in your deck.</li>
+  <li><strong>Does it show the cost before running?</strong>A warehouse dry run returns the bytes a query will scan, for free. A tool that doesn't surface that is choosing not to.</li>
+</ol>
+
+<h2>The honest upside</h2>
+
+<p>The ceiling is real, and so is the floor — which is higher than the sceptics say. The biggest win is that an AI analyst removes the <strong>queue</strong>. Not that it replaces an analyst, but that small questions finally get asked instead of dropped because they weren't worth interrupting someone for. Those small, "might be nothing" questions are where a surprising share of useful findings come from.</p>
+
+<p>It's also genuinely good at the mechanical parts: remembering a schema across dozens of tables, writing valid SQL, applying a stated definition consistently within a conversation, and doing it in seconds. That's most of the <em>volume</em> of analytics work, even if it isn't most of the value.</p>
+
+<aside class="callout">
+  <p><strong>The framing that holds up:</strong> an AI analyst is a very fast junior who has read your entire schema, never gets bored, and has no idea how your business works. Everything on the list above follows from that last part.</p>
+</aside>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">No holdout was ever run. The AI says the campaign caused a 30% rise in sales. What's wrong?</p>
+  <details><summary>Nothing — the warehouse data proves it</summary><p><span class="wrong">No.</span> The warehouse holds what happened, not what would have happened without the campaign.</p></details>
+  <details><summary>Causation needs a counterfactual; without a holdout this is correlation</summary><p><span class="right">Exactly.</span> Incrementality needs a control group created before the fact.</p></details>
+  <details><summary>The model is too small to judge campaigns</summary><p><span class="wrong">No.</span> Model size is irrelevant — the limit is structural.</p></details>
+</div>
+
+<h2>Questions people ask</h2>
+
+<div class="faq">
+  <details><summary>Will better models fix these?</summary><p>Some. Long multi-step analysis (6) is improving fast. Consistency (5) is being solved by architecture. Causation (3) and accountability (8) aren't model problems. Broken data (2) and unconnected data (7) are ours to fix.</p></details>
+  <details><summary>So should I avoid them?</summary><p>No — use one with the ceiling in view. The real failure is treating its output as the answer instead of a draft with its working shown.</p></details>
+  <details><summary>What's the single best thing I can do to make one work better?</summary><p>Write column descriptions and define your core metrics in one fixed place. Unglamorous, and it tackles limits 1 and 5 — the two behind most wrong answers.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>Eight limits; causation and accountability are structural, not model-sized.</li>
+    <li>Consistency comes from fixed metric definitions, not bigger models.</li>
+    <li>Unconnected data is the most common cause of confidently wrong answers — and it's on us.</li>
+    <li>Test any tool on four things: shows SQL, admits ignorance, stays consistent, previews cost.</li>
+  </ul>
+</div>

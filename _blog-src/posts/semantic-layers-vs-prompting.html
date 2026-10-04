@@ -1,0 +1,163 @@
+<!--meta
+{
+  "title": "Semantic layers vs. prompting: where business definitions should live",
+  "hand": "(definitions, not suggestions)",
+  "tag": "AI analytics",
+  "description": "A metric definition in a prompt is a suggestion the model usually follows. In a semantic layer it is fixed SQL. Where each belongs, a simple test for deciding, and a one-week way to start.",
+  "minutes": 7,
+  "date": "2026-10-04",
+  "order": 5,
+  "tldr": [
+    "<strong>A definition in a prompt is probabilistic</strong> — it drifts with phrasing, weakens in long contexts, can't be reviewed, and other tools never see it.",
+    "<strong>A definition in a semantic layer is fixed SQL</strong> — identical every time, version-controlled, shared by every tool.",
+    "<strong>The model picks the metric; the layer defines it.</strong> Start with a few views and column descriptions — about a week of work."
+  ],
+  "bottom": "the prompt shapes judgement, the layer fixes values"
+}
+-->
+<p><em>"A repeat customer is anyone with two or more paid orders in the last 12 months."</em></p>
+
+<p>You can write that sentence into an AI tool's system prompt, or you can encode it in a semantic layer. Both will get the AI to produce the right SQL most of the time. Only one of them is actually a definition. The other is a suggestion the model usually follows.</p>
+
+<p>You won't see the difference in week one. You'll see it a few months in, when someone asks the question a new way, gets "the last 365 days" instead of "the last 12 calendar months" — or worse, "this calendar year" — and three people bring three repeat-customer numbers to one meeting.</p>
+
+<h2>What "it's in the prompt" really means</h2>
+
+<p>A system prompt is text the model reads before it writes SQL. It works, most of the time. And it fails in four specific ways that share one cause: <strong>nothing obliges the model to follow it.</strong></p>
+
+<ol class="steps">
+  <li><strong>It drifts with phrasing.</strong>"How many repeat customers?", "Who bought again this year?" and "Show returning buyers" can produce three different queries — the definition was in context each time, but each wording nudged the generation differently.</li>
+  <li><strong>It weakens as the prompt grows.</strong>A definition on line 40 of a 200-line prompt competes with every other instruction, metric and table description. Adherence fades quietly — the query still runs and still looks plausible.</li>
+  <li><strong>It can't be reviewed.</strong>Editing a prompt is editing prose. Nothing tests it, and nobody can tell from the change whether the SQL it produces moved. Change a SQL expression in version control and the diff <em>is</em> the change.</li>
+  <li><strong>It doesn't travel.</strong>Dashboards, scheduled reports and analysts' hand-written queries never read the AI's prompt, so the metric means one thing in chat and another everywhere else.</li>
+</ol>
+
+<aside class="callout warn">
+  <p><strong>The failure is silent — that's what makes it expensive.</strong> A model that ignores a prompt definition doesn't error. It returns valid SQL and a believable number computed slightly differently, and nobody notices until two numbers meet.</p>
+</aside>
+
+<h2>What a semantic layer actually is</h2>
+
+<p>Without the vendor gloss: <strong>a version-controlled file that maps a business term to one exact SQL expression, plus something that expands references to it.</strong></p>
+
+```sql title="metrics/repeat_customers.sql — one metric, one file"
+-- name:        repeat_customers
+-- grain:       customer
+-- definition:  customers with 2+ paid, non-refunded orders in the
+--              12 calendar months before the reference month
+-- owner:       retention team
+-- changelog:   2026-09-12 — stopped counting fully refunded orders
+SELECT COUNT(*) AS repeat_customers
+FROM (
+  SELECT customer_id
+  FROM orders
+  WHERE payment_status IN ('paid', 'partially_refunded')
+    AND refund_amount < order_total
+    AND DATE(created_at, 'Asia/Kolkata')
+        BETWEEN DATE_SUB(@month_start, INTERVAL 12 MONTH)
+            AND DATE_SUB(@month_start, INTERVAL 1 DAY)
+  GROUP BY customer_id
+  HAVING COUNT(*) >= 2
+);
+```
+
+<p>That header gives you three things a prompt line never can: a <strong>grain</strong>, an <strong>owner</strong> and a <strong>changelog</strong>. When someone asks in six months why the number moved, the answer is in the file.</p>
+
+<p>The important part is where the line between the model and the layer sits:</p>
+
+<ol class="steps">
+  <li><strong>The model reads the intent.</strong>"Repeat customers in Pune last quarter?" becomes: metric = repeat_customers, filters = city and period. Genuinely hard, and models are good at it.</li>
+  <li><strong>The layer supplies the metric.</strong>repeat_customers expands to its exact SQL. The model doesn't write it and can't vary it.</li>
+  <li><strong>The model adds filters and grouping.</strong>A <code>WHERE</code> on city and a <code>GROUP BY</code> on month around a fixed expression — mechanical and easy to check.</li>
+  <li><strong>The query is validated before it runs.</strong>A dry run catches invalid columns and reports the cost, for free.</li>
+</ol>
+
+<p><strong>The model selects; the layer defines.</strong> That sentence is the whole design.</p>
+
+<h2>Which definitions belong where?</h2>
+
+<p>Not everything needs a layer entry — 300 unmaintained entries are worse than 12 correct ones. The test I use: <strong>what happens if this is 5% wrong?</strong></p>
+
+<div class="table-wrap">
+<table class="data">
+  <thead><tr><th>Definition</th><th>Where it lives</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Revenue, CAC, contribution margin, repeat customer</td><td><strong>Semantic layer</strong></td><td>Ends up in budget decisions and board decks</td></tr>
+    <tr><td>New vs. returning customer</td><td><strong>Semantic layer</strong></td><td>A judgement call with a big effect on the number</td></tr>
+    <tr><td>Date formats, tone, output style</td><td>Prompt</td><td>Being wrong is cosmetic</td></tr>
+    <tr><td>Which table to use for campaign questions</td><td>Prompt</td><td>Mistakes show up as obviously wrong results, not subtly wrong ones</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Most businesses have somewhere between 10 and 30 definitions that fail the 5% test. That's a week of work, not a quarter.</p>
+
+<h2>How to start without buying anything</h2>
+
+<p>The cheapest version captures most of the value: a schema of views that every consumer reads.</p>
+
+```sql title="A semantic layer that is just a view"
+-- The AI tool, dashboards, analysts and scheduled reports all read this.
+-- One definition, changed only through code review.
+CREATE OR REPLACE VIEW semantic.monthly_customers AS
+SELECT
+  DATE_TRUNC(DATE(o.created_at, 'Asia/Kolkata'), MONTH)           AS month,
+  o.sales_channel,
+  o.state,
+  COUNT(DISTINCT o.customer_id)                                   AS customers,
+  COUNT(DISTINCT IF(o.is_first_order, o.customer_id, NULL))       AS new_customers,
+  SUM(o.net_revenue)                                              AS net_revenue
+FROM semantic.orders_clean o
+WHERE o.payment_status IN ('paid', 'partially_refunded')
+GROUP BY month, o.sales_channel, o.state;
+```
+
+<p>Point the AI at <code>semantic.*</code> instead of raw tables and a whole class of ambiguity disappears — the confusing columns simply aren't reachable.</p>
+
+<p>Then add column descriptions in the warehouse itself, where every tool that reads the schema picks them up:</p>
+
+```sql title="One line that beats a paragraph of prompt"
+ALTER TABLE analytics.orders
+ALTER COLUMN order_total
+SET OPTIONS (description =
+  'Includes tax and shipping. NOT revenue — use net_revenue for reporting.');
+```
+
+<p>Move to a dedicated semantic-layer framework when you have more than a couple of dozen metrics, metrics built on other metrics, or several teams changing them. Until then, views plus descriptions are the right size.</p>
+
+<ul class="checklist">
+  <li><strong>Point the AI at curated views</strong>, not raw tables.</li>
+  <li><strong>Describe your trap columns</strong> on the 20 most-queried tables — lead with which column <em>not</em> to use.</li>
+  <li><strong>Record synonyms once</strong> ("sales" means <code>net_revenue</code>) where every tool can read it.</li>
+  <li><strong>Adopt a framework later</strong>, when dependencies between metrics become the problem.</li>
+</ul>
+
+<h2>What the prompt is still for</h2>
+
+<p>Prompts aren't obsolete. They handle everything that's about <em>behaviour</em> rather than <em>values</em>:</p>
+<ul>
+  <li><strong>Disambiguation</strong> — "when someone says 'sales', use net revenue and say so".</li>
+  <li><strong>Table guidance</strong> — "campaign questions use <code>semantic.campaign_daily</code>".</li>
+  <li><strong>Guardrails</strong> — "always filter by date; never scan the raw events table".</li>
+  <li><strong>Uncertainty</strong> — "if two metrics could fit, ask instead of picking".</li>
+</ul>
+<p>Policies about how to act go in the prompt. Facts that must be exactly right go in the layer.</p>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">"Repeat customers?" asked three ways returns three different numbers. What broke?</p>
+  <details><summary>The warehouse data went stale overnight</summary><p><span class="wrong">No.</span> Stale data would shift every phrasing equally.</p></details>
+  <details><summary>A prompt definition drifted with phrasing — it belongs in the layer</summary><p><span class="right">Exactly.</span> Each wording conditions the generation differently. A fixed SQL expression can't drift.</p></details>
+  <details><summary>The model needs fine-tuning on your metrics</summary><p><span class="wrong">No.</span> A fine-tune goes stale with the next schema change; a versioned definition doesn't.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>A prompt definition is a suggestion: it drifts, fades and can't be reviewed.</li>
+    <li>A layer definition is fixed SQL, versioned and shared by every tool.</li>
+    <li>The model selects the metric; the layer defines it.</li>
+    <li>Start with curated views and column descriptions — a week of work, most of the benefit.</li>
+  </ul>
+</div>

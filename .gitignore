@@ -13,3 +13,6 @@ desktop.ini
 # Gemini/AI artifacts
 .gemini/
 .claude/
+
+# Local-only list of words the blog build must reject
+_blog-src/blocked-words.txt

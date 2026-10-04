@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your winning ad might be a coin flip — Chinmay Raibagkar</title>
+  <meta name="description" content="Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly." />
+  <meta name="robots" content="noindex, follow" />
+  <meta property="og:title" content="Your winning ad might be a coin flip — Chinmay Raibagkar" />
+  <meta property="og:description" content="Two identical ads can show a 20% gap by pure chance. How much data a creative test really needs, why peeking manufactures winners, and a protocol for calling results honestly." />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50' font-size='48'>⚡</text></svg>" />
+  <script>
+  (function () {
+    var t = new URLSearchParams(location.search).get('theme');
+    var saved = t === 'light' || t === 'dark' ? t : null;
+    try { saved = saved || localStorage.getItem('theme'); if (t) localStorage.setItem('theme', t); } catch (e) {}
+    if (saved === 'light' || (!saved && matchMedia('(prefers-color-scheme: light)').matches)) {
+      document.documentElement.classList.add('light-theme');
+    }
+  })();
+</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GHQ57J0SF"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-6GHQ57J0SF');
+</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../../style.css?v=5" />
+  <link rel="stylesheet" href="../../blog/blog.css?v=2" />
+</head>
+<body>
+  <nav class="blog-nav">
+    <div class="blog-nav-inner">
+      <a href="../../" class="nav-logo" aria-label="Chinmay Raibagkar — home"><span>CR</span></a>
+      <a href="../../" class="blog-nav-link">Home</a>
+      <a href="../../blog/" class="blog-nav-link">Blog</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+      </button>
+    </div>
+  </nav>
+  <main class="blog-main">
+    <article>
+      <header>
+        <span class="post-eyebrow">Ad testing</span>
+        <h1 class="post-title">Your winning ad might be a coin flip <span class="post-hand">(check before you scale)</span></h1>
+        <p class="post-meta">By <a href="../../">Chinmay Raibagkar</a> · October 4, 2026 · 8 min read</p>
+      </header>
+      <section class="tldr" aria-label="The 60-second version">
+        <h2>The 60-second version</h2>
+        <ul><li><strong>Small tests produce big fake winners</strong> — identical ads routinely differ by 10–25% on a week of modest traffic.</li><li><strong>Size the test before launch:</strong> catching a 20% lift takes roughly 400 conversions per ad, not 40.</li><li><strong>Use real split tests, don't peek, wait out conversion lag,</strong> and write down the confidence range — "not proven" is a result.</li></ul>
+        <p class="bottom">size it first, read it once</p>
+      </section>
+      <div class="prose">
+<p>Thursday's creative review. The new hook — Ad B — converted at <strong>1.80%</strong>. The old one, Ad A, at <strong>1.50%</strong>. That's a <strong>20% lift</strong>. Budget moves to B, A gets paused, and "new hook wins" goes into the learnings doc.</p>
+
+<p>A month later, B is converting at 1.53% — right where A always sat. The hook didn't stop working. It never worked better. One week and 8,000 visitors per ad simply can't separate a 20% gap from luck.</p>
+
+<div class="case">
+  <div class="case-title">The winner that wasn't <span class="case-badge">Creative test</span></div>
+  <div class="case-grid">
+    <div class="case-cell"><span class="k">Ad A (old hook)</span><span class="v">120 / 8,000</span><span class="s">1.50% conversion rate</span></div>
+    <div class="case-cell"><span class="k">Ad B (new hook)</span><span class="v">144 / 8,000</span><span class="s">1.80% conversion rate</span></div>
+    <div class="case-cell"><span class="k">Apparent lift</span><span class="v">+20%</span><span class="s">What went in the learnings doc</span></div>
+    <div class="case-cell"><span class="k">Confidence it's real</span><span class="v">≈ 86% (p ≈ 0.14)</span><span class="s">Short of the usual 95% bar</span></div>
+    <div class="case-cell"><span class="k">Needed for a 20% lift</span><span class="v">≈ 26,300 visitors per ad</span><span class="s">≈ 394 conversions each — 3× what they had</span></div>
+    <div class="case-cell"><span class="k">Next four weeks</span><span class="v">B 1.53% vs A 1.51%</span><span class="s">The gap was noise</span></div>
+  </div>
+  <p class="case-foot">86% sounds solid. It means roughly a 1-in-7 chance of a gap this big between two ads that are actually identical. A team testing every week will crown a fake winner like this every couple of months.</p>
+</div>
+
+<h2>Two identical ads, one "winner"</h2>
+
+<p>The simulator below runs an <strong>A/A test</strong>: both ads convert at exactly 2%, so any gap is pure chance. Re-run it a few times at low traffic, then drag the slider up.</p>
+
+<div class="widget" data-widget="aa-test" data-rate="0.02" data-days="7">
+  <p class="widget-title">Two identical ads, one week</p>
+  <label>Traffic: <strong data-show="daily"></strong>
+    <input type="range" name="daily" min="200" max="5000" step="100" value="400"></label>
+  <div class="out"></div>
+  <p class="verdict"></p>
+  <button type="button">Re-run the week</button>
+</div>
+
+<p>At a few hundred visitors a day, 10–25% gaps between identical ads are routine. At several thousand a day they shrink to a few percent. Nothing about the ads changed — only the amount of data. <strong>The smaller the test, the bigger the lies it can tell.</strong></p>
+
+<h2>Why platforms crown winners too early</h2>
+
+<ul>
+  <li><strong>Uneven delivery isn't a test.</strong> Put four ads in one ad set and the platform picks a favourite within a day or two and starves the rest. The "losers" never got enough traffic to lose fairly.</li>
+  <li><strong>Peeking.</strong> Checking daily and stopping the first time it looks significant gives luck many chances to win. Commonly cited simulations put the false-winner rate at 20–30% instead of the 5% you think you're accepting.</li>
+  <li><strong>Too many variants.</strong> Test ten ads against a control and, by chance alone, one will usually look like a winner at 90% confidence. More arms need more data or a stricter bar.</li>
+</ul>
+
+<aside class="callout">
+  <p><strong>Use the platform's real split-test tools.</strong> Meta's A/B test feature and Google Ads experiments put people into separate groups so each version gets comparable traffic. A normal ad set or ad group is built to <em>optimise</em>, not to <em>compare</em>.</p>
+</aside>
+
+<h2>How much data does a test need?</h2>
+
+<p>Two things decide it: how often people convert, and how small a difference you want to detect. Low conversion rates and small lifts need a lot of traffic. Try your own numbers:</p>
+
+<div class="widget" data-widget="test-size">
+  <p class="widget-title">How big does your test need to be?</p>
+  <label>Current conversion rate: <strong data-show="cvr"></strong>
+    <input type="range" name="cvr" min="0.005" max="0.1" step="0.005" value="0.015"></label>
+  <label>Smallest lift worth detecting: <strong data-show="lift"></strong>
+    <input type="range" name="lift" min="0.05" max="0.5" step="0.05" value="0.2"></label>
+  <label>Visitors per ad per day: <strong data-show="daily"></strong>
+    <input type="range" name="daily" min="100" max="5000" step="100" value="1100"></label>
+  <div class="out"></div>
+  <p class="verdict"></p>
+</div>
+
+<p>Under the hood is a standard rule of thumb for 95% confidence and 80% power: <code>n ≈ 16 × p(1−p) ÷ (p × lift)²</code> visitors per ad. The version worth memorising: <strong>to detect a 20% lift you need roughly 400 conversions per ad.</strong> A 50% lift needs only about 60; a 10% lift needs around 1,600. That's why bold ideas are far easier to test than small tweaks.</p>
+
+<aside class="callout warn">
+  <p><strong>Wait for conversion lag.</strong> If people often buy two or three days after clicking, the last days of the test are still missing conversions. Read it only after the lag window closes.</p>
+</aside>
+
+<h2>Reading the result honestly</h2>
+
+<p>When the test reaches its planned size, check significance <em>once</em>. This query returns the lift, a z-score and a 95% range for the true difference:</p>
+
+<div class="code"><div class="code-title">A/B result: lift, z-score and 95% range</div><pre><code><span class="kw">WITH</span> totals <span class="kw">AS</span> (
+  <span class="kw">SELECT</span>
+    <span class="kw">SUM</span>(<span class="kw">IF</span>(arm = &#x27;A&#x27;, visitors, 0))    <span class="kw">AS</span> n_a,
+    <span class="kw">SUM</span>(<span class="kw">IF</span>(arm = &#x27;A&#x27;, conversions, 0)) <span class="kw">AS</span> c_a,
+    <span class="kw">SUM</span>(<span class="kw">IF</span>(arm = &#x27;B&#x27;, visitors, 0))    <span class="kw">AS</span> n_b,
+    <span class="kw">SUM</span>(<span class="kw">IF</span>(arm = &#x27;B&#x27;, conversions, 0)) <span class="kw">AS</span> c_b
+  <span class="kw">FROM</span> creative_test_daily
+  <span class="kw">WHERE</span> test_name = &#x27;new_hook_nov&#x27;
+    <span class="kw">AND</span> day <span class="kw">BETWEEN</span> &#x27;2026-11-02&#x27; <span class="kw">AND</span> &#x27;2026-11-15&#x27;   <span class="cm">-- window fixed before launch</span>
+),
+rates <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> c_a / n_a <span class="kw">AS</span> p_a, c_b / n_b <span class="kw">AS</span> p_b,
+         (c_a + c_b) / (n_a + n_b) <span class="kw">AS</span> p_all, n_a, n_b
+  <span class="kw">FROM</span> totals
+)
+<span class="kw">SELECT</span>
+  <span class="kw">ROUND</span>(p_a * 100, 2)                                                    <span class="kw">AS</span> cvr_a_pct,
+  <span class="kw">ROUND</span>(p_b * 100, 2)                                                    <span class="kw">AS</span> cvr_b_pct,
+  <span class="kw">ROUND</span>((p_b / p_a - 1) * 100, 1)                                        <span class="kw">AS</span> lift_pct,
+  <span class="kw">ROUND</span>((p_b - p_a) / <span class="kw">SQRT</span>(p_all * (1 - p_all) * (1 / n_a + 1 / n_b)), 2) <span class="kw">AS</span> z,
+  <span class="cm">-- 95% range for the true difference, in percentage points</span>
+  <span class="kw">ROUND</span>((p_b - p_a - 1.96 * <span class="kw">SQRT</span>(p_a * (1 - p_a) / n_a + p_b * (1 - p_b) / n_b)) * 100, 2) <span class="kw">AS</span> low_pp,
+  <span class="kw">ROUND</span>((p_b - p_a + 1.96 * <span class="kw">SQRT</span>(p_a * (1 - p_a) / n_a + p_b * (1 - p_b) / n_b)) * 100, 2) <span class="kw">AS</span> high_pp
+<span class="kw">FROM</span> rates;</code></pre></div>
+
+<p>A <code>z</code> beyond ±1.96 clears the 95% bar. The range is more telling: if <code>low_pp</code> is below zero, the true effect might be nothing — or negative. For the Thursday "winner" above, z is about 1.49 and the range runs from roughly −0.10 to +0.70 points. It includes zero, so the test proved nothing.</p>
+
+<h2>A test protocol that holds up</h2>
+
+<ol class="steps">
+  <li><strong>Write down the question and one metric</strong>One hypothesis, one primary metric — conversion rate, CPA or CTR — chosen before launch.</li>
+  <li><strong>Size it before you start</strong>The lift worth catching sets the traffic and days. If it's too long, test a bolder idea.</li>
+  <li><strong>Split traffic properly</strong>Use the platform's A/B or experiment feature, with two or three variants at most.</li>
+  <li><strong>Don't peek, don't stop early</strong>Run to the planned size plus the lag window. Daily checks are for broken links, not winners.</li>
+  <li><strong>Read once, record the range</strong>Log the lift, the confidence and the range. "Not proven" is a valid outcome — it stops you scaling luck.</li>
+</ol>
+
+<ul class="checklist">
+  <li><strong>No "winner" under ~400 conversions per arm</strong> for a 20% lift — smaller tests are directional, never proven.</li>
+  <li><strong>Test big swings, not button colours</strong> — new angles and formats produce lifts you can measure on normal budgets.</li>
+  <li><strong>Re-check winners after scaling</strong> — compare four weeks at full budget against the test. If the lift vanished, update the doc.</li>
+</ul>
+
+<h2>Quick gut-check</h2>
+
+<div class="quiz">
+  <p class="q">After 3 days a new ad shows a 29% higher conversion rate: 45 conversions vs 35 on similar traffic. The team wants to scale today. What do you say?</p>
+  <details><summary>Scale it — 29% is a big lift</summary><p><span class="wrong">No.</span> With 35–45 conversions per ad, gaps that size appear between identical ads all the time.</p></details>
+  <details><summary>Keep both running to the planned size, then check once</summary><p><span class="right">Exactly.</span> About 80 conversions in total is far too few to confirm even a large lift.</p></details>
+  <details><summary>Stop now — it's already significant</summary><p><span class="wrong">No.</span> 45 vs 35 isn't significant, and stopping on a good-looking day is exactly how fake winners get made.</p></details>
+</div>
+
+<div class="takeaways">
+  <h2>Takeaways</h2>
+  <ul>
+    <li>Identical ads often differ by 20% in a week — big lifts on small tests are usually luck.</li>
+    <li>Roughly 400 conversions per ad to confirm a 20% lift at 95% confidence.</li>
+    <li>Peeking and stopping early can turn a 5% false-winner rate into 20–30%.</li>
+    <li>Ad sets optimise, they don't compare — use proper split tests.</li>
+    <li>Bold ideas need far less traffic to prove than small tweaks.</li>
+  </ul>
+</div>
+      </div>
+      <aside class="post-author">
+        <span class="avatar" aria-hidden="true">CR</span>
+        <div>
+          <span class="who">Chinmay Raibagkar</span>
+          <p>Marketing analyst working on data and automation — warehouses, ad platforms and the reports in between. <a href="../../#contact">Say hello</a>.</p>
+        </div>
+      </aside>
+    </article>
+    <section class="more-posts" aria-label="More posts">
+      <h2>Keep reading</h2>
+      <div class="post-grid">
+      <a class="post-card" href="../pmax-channel-performance-report/">
+        <span class="tag">Google Ads</span>
+        <h3>Where your PMax money actually goes</h3>
+        <span class="hand">(read the channel report)</span>
+        <p>Performance Max now breaks spend and conversion value out by channel. How to read Search, YouTube, Display and Discover side by side, strip out view credit, and find the channels living off one blended ROAS.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      <a class="post-card" href="../audit-ai-query-60-seconds/">
+        <span class="tag">SQL · AI</span>
+        <h3>How to audit an AI-generated query in 60 seconds</h3>
+        <span class="hand">(three places to look)</span>
+        <p>A one-minute routine for checking any AI-written SQL before you trust its number: the joins, the filters and the grain — in that order — plus a five-second cost and sanity check.</p>
+        <span class="meta">5 min read</span>
+      </a>
+      <a class="post-card" href="../ai-agent-ad-account-write-access/">
+        <span class="tag">AI · Ad accounts</span>
+        <h3>Your AI agent can now edit your ad account</h3>
+        <span class="hand">(read is a report, write is a risk)</span>
+        <p>AI agents can now pause ads and move budgets. Why a wrong action costs far more than a wrong answer, and the permission setup that keeps an agent useful without letting it run up a bill.</p>
+        <span class="meta">7 min read</span>
+      </a>
+      </div>
+    </section>
+  </main>
+  <footer class="blog-footer">
+    <p>© 2026 Chinmay Raibagkar · <a href="../../">Portfolio</a> · <a href="../../blog/">All posts</a></p>
+  </footer>
+  <script src="../../blog/blog.js?v=2" defer></script>
+</body>
+</html>
